@@ -2,105 +2,58 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProjectRequest;
+use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
-use App\Models\Department;
-use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-
-    public function index(Request $request)
+    public function index()
     {
-        $search = $request->search;
-
-
-        $projects = Project::with('department')
-            ->when($search, function($query) use ($search){
-
-                $query->where('nom','like',"%$search%");
-
-            })
-            ->latest()
+        $projects = Project::withCount('documents')
+            ->orderBy('nom')
             ->paginate(10);
-
 
         return view('projects.index', compact('projects'));
     }
 
-
-
     public function create()
     {
-        $departments = Department::all();
-
-        return view('projects.create', compact('departments'));
+        return view('projects.create');
     }
 
-
-
-    public function store(Request $request)
+    public function store(StoreProjectRequest $request)
     {
-        $request->validate([
+        Project::create($request->validated());
 
-            'nom'=>'required',
-            'description'=>'nullable',
-            'date_debut'=>'nullable|date',
-            'date_fin'=>'nullable|date',
-            'statut'=>'required',
-            'department_id'=>'required'
-
-        ]);
-
-
-        Project::create($request->all());
-
-
-        return redirect()
-            ->route('projects.index')
-            ->with('success','Projet ajouté avec succès.');
+        return redirect()->route('projects.index')
+            ->with('success', 'Projet créé avec succès.');
     }
-
-
-
-    public function show(Project $project)
-    {
-        return view('projects.show', compact('project'));
-    }
-
-
 
     public function edit(Project $project)
     {
-        $departments = Department::all();
-
-        return view('projects.edit', compact(
-            'project',
-            'departments'
-        ));
+        return view('projects.edit', compact('project'));
     }
 
-
-
-    public function update(Request $request, Project $project)
+    public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->all());
+        $project->update($request->validated());
 
-
-        return redirect()
-            ->route('projects.index')
-            ->with('success','Projet modifié avec succès.');
+        return redirect()->route('projects.index')
+            ->with('success', 'Projet mis à jour avec succès.');
     }
-
-
 
     public function destroy(Project $project)
     {
+        // Empêcher la suppression d'un projet encore lié à des documents
+        if ($project->documents()->exists()) {
+            return redirect()->route('projects.index')
+                ->with('error', 'Impossible de supprimer ce projet : des documents y sont rattachés.');
+        }
+
         $project->delete();
 
-
-        return redirect()
-            ->route('projects.index')
-            ->with('success','Projet supprimé.');
+        return redirect()->route('projects.index')
+            ->with('success', 'Projet supprimé avec succès.');
     }
-
 }

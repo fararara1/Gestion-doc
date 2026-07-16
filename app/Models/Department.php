@@ -6,19 +6,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class Department extends Model
 {
-    protected $fillable = ['nom'];
+    protected $fillable = [
+        'nom',
+        'description',
+    ];
 
+    /**
+     * Relation : un département possède plusieurs utilisateurs.
+     */
     public function users()
     {
         return $this->hasMany(User::class);
     }
-
-    public function documents()
-    {
-        return $this->hasMany(Document::class);
-    }
-    public function projects()
-{
-    return $this->hasMany(Project::class);
-}
 }
