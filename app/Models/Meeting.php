@@ -48,6 +48,11 @@ class Meeting extends Model
         $end = \Carbon\Carbon::parse($this->date . ' ' . $this->heure_fin)->format('Ymd\THis');
         $uid = uniqid('meeting-' . $this->id . '-', false) . '@gestdoc';
 
+        $escapeIcs = function (string $value): string {
+            $value = str_replace(["\r\n", "\n", "\r"], '\\n', $value);
+            return addcslashes($value, ",;'");
+        };
+
         $lines = [
             'BEGIN:VCALENDAR',
             'VERSION:2.0',
@@ -59,13 +64,13 @@ class Meeting extends Model
             'DTSTAMP:' . now()->format('Ymd\THis'),
             'DTSTART;TZID=Europe/Paris:' . $start,
             'DTEND;TZID=Europe/Paris:' . $end,
-            'SUMMARY:' . addcslashes($this->titre, ','),
-            'DESCRIPTION:' . addcslashes(nl2br(e($this->description ?? '')), ','),
-            'ORGANIZER;CN=' . addcslashes(($this->organisateur?->prenom ?? '') . ' ' . ($this->organisateur?->nom ?? ''), ',') . ':mailto:' . ($this->organisateur?->email ?? ''),
+            'SUMMARY:' . $escapeIcs($this->titre),
+            'DESCRIPTION:' . $escapeIcs(nl2br(e($this->description ?? ''))),
+            'ORGANIZER;CN=' . $escapeIcs(($this->organisateur?->prenom ?? '') . ' ' . ($this->organisateur?->nom ?? '')) . ':mailto:' . ($this->organisateur?->email ?? ''),
         ];
 
         foreach ($this->participants as $participant) {
-            $lines[] = 'ATTENDEE;CN=' . addcslashes($participant->prenom . ' ' . $participant->nom, ',') . ':mailto:' . $participant->email;
+            $lines[] = 'ATTENDEE;CN=' . $escapeIcs($participant->prenom . ' ' . $participant->nom) . ':mailto:' . $participant->email;
         }
 
         $lines[] = 'END:VEVENT';

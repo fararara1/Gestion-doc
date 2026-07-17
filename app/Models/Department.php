@@ -18,4 +18,20 @@ class Department extends Model
     {
         return $this->hasMany(User::class);
     }
+
+    /**
+     * Relation : un département possède plusieurs documents.
+     */
+    public function documents()
+    {
+        return $this->hasMany(Document::class);
+    }
+
+    /**
+     * Relation : un département possède plusieurs projets.
+     */
+    public function projects()
+    {
+        return $this->hasMany(Project::class);
+    }
 }

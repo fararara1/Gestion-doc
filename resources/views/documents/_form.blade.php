@@ -49,11 +49,33 @@
         <label class="form-label">
             Fichier {{ isset($document) ? '(laisser vide pour conserver le fichier actuel)' : '' }}
         </label>
-        <input type="file" name="fichier" class="form-control @error('fichier') is-invalid @enderror">
+        <input type="file" name="fichier" class="form-control @error('fichier') is-invalid @enderror"
+               onchange="previewFile(this)">
         @error('fichier') <div class="invalid-feedback">{{ $message }}</div> @enderror
-        @if(isset($document))
-            <small class="text-muted">Fichier actuel : {{ basename($document->fichier) }}</small>
+        @if(isset($document) && $document->fichier)
+            <div class="mt-2 d-flex align-items-center gap-2">
+                <i class="bi bi-file-earmark-text text-primary"></i>
+                <small class="text-muted">Fichier actuel : {{ basename($document->fichier) }}</small>
+                <a href="{{ route('documents.download', $document) }}" class="btn btn-sm btn-outline-success">
+                    <i class="bi bi-download"></i> Télécharger
+                </a>
+            </div>
         @endif
+        <div id="filePreview" class="mt-2"></div>
     </div>
 </div>
 <hr class="my-4">
+
+<script>
+function previewFile(input) {
+    const preview = document.getElementById('filePreview');
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = '<div class="alert alert-info"><i class="bi bi-file-earmark-check"></i> Fichier sélectionné : <strong>' + file.name + '</strong> (' + (file.size / 1024 / 1024).toFixed(2) + ' MB)</div>';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+</script>

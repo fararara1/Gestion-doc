@@ -36,6 +36,8 @@ class DepartmentController extends Controller
 
     public function show(Department $department)
     {
+        $department->load(['users', 'documents', 'projects']);
+
         return view('departments.show', compact('department'));
     }
 

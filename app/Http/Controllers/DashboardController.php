@@ -20,7 +20,10 @@ class DashboardController extends Controller
             $usersCount = User::count();
 
             $recentDocuments = Document::latest()->take(5)->get();
-            $upcomingMeetings = Meeting::orderBy('date')->take(5)->get();
+            $upcomingMeetings = Meeting::where('date', '>=', now()->toDateString())
+                ->orderBy('date')
+                ->take(5)
+                ->get();
         } else {
             $documentsCount = Document::where('user_id', $user->id)
                 ->orWhereHas('sharedWith', fn ($q) => $q->where('users.id', $user->id))
@@ -40,8 +43,11 @@ class DashboardController extends Controller
                 ->take(5)
                 ->get();
 
-            $upcomingMeetings = Meeting::where('user_id', $user->id)
-                ->orWhereHas('participants', fn ($q) => $q->where('users.id', $user->id))
+            $upcomingMeetings = Meeting::where(function ($query) use ($user) {
+                    $query->where('user_id', $user->id)
+                        ->orWhereHas('participants', fn ($q2) => $q2->where('users.id', $user->id));
+                })
+                ->where('date', '>=', now()->toDateString())
                 ->orderBy('date')
                 ->take(5)
                 ->get();

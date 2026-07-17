@@ -2,671 +2,643 @@
 
 @section('content')
 
-<div class="container-fluid py-4">
-    <style>
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
-
-:root{
-    --primary:#2563eb;
-    --primary-dark:#1d4ed8;
-    --secondary:#64748b;
-    --success:#16a34a;
-    --warning:#f59e0b;
-    --danger:#dc2626;
-    --purple:#7c3aed;
-    --cyan:#06b6d4;
-
-    --bg:#f4f7fb;
-    --white:#ffffff;
-    --text:#1e293b;
-    --text-light:#64748b;
-    --border:#e5e7eb;
-
-    --radius:18px;
-    --transition:.35s;
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:var(--bg);
-    color:var(--text);
-}
-
-/*============================
-            CARDS
-============================*/
-
-.card{
-
-    border:none;
-
-    border-radius:var(--radius);
-
-    background:var(--white);
-
-    box-shadow:0 12px 35px rgba(0,0,0,.06);
-
-    transition:var(--transition);
-
-    overflow:hidden;
-
-}
-
-.card:hover{
-
-    transform:translateY(-6px);
-
-    box-shadow:0 20px 45px rgba(37,99,235,.15);
-
-}
-
-.card-header{
-
-    background:white;
-
-    border-bottom:1px solid var(--border);
-
-    font-weight:600;
-
-    font-size:18px;
-
-    color:var(--text);
-
-}
-
-/*============================
-          STAT CARDS
-============================*/
-
-.stat-card{
-
-    border-radius:22px;
-
-    padding:28px;
-
-    background:white;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    box-shadow:0 15px 35px rgba(0,0,0,.05);
-
-    transition:.3s;
-
-}
-
-.stat-card:hover{
-
-    transform:translateY(-7px);
-
-}
-
-.stat-icon{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:18px;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:white;
-
-    font-size:32px;
-
-}
-
-.bg-blue{
-
-    background:linear-gradient(135deg,#2563eb,#60a5fa);
-
-}
-
-.bg-green{
-
-    background:linear-gradient(135deg,#16a34a,#4ade80);
-
-}
-
-.bg-orange{
-
-    background:linear-gradient(135deg,#f59e0b,#fbbf24);
-
-}
-
-.bg-red{
-
-    background:linear-gradient(135deg,#dc2626,#ef4444);
-
-}
-
-.bg-purple{
-
-    background:linear-gradient(135deg,#7c3aed,#a855f7);
-
-}
-
-.bg-cyan{
-
-    background:linear-gradient(135deg,#0891b2,#22d3ee);
-
-}
-
-.stat-title{
-
-    color:var(--text-light);
-
-    font-size:15px;
-
-}
-
-.stat-number{
-
-    font-size:34px;
-
-    font-weight:700;
-
-    color:var(--text);
-
-}
-
-.stat-sub{
-
-    font-size:13px;
-
-    color:#94a3b8;
-
-}
-
-/*============================
-            BUTTONS
-============================*/
-
-.btn{
-
-    border-radius:12px;
-
-    padding:10px 22px;
-
-    font-weight:500;
-
-    transition:.3s;
-
-    border:none;
-
-}
-
-.btn-primary{
-
-    background:linear-gradient(135deg,#2563eb,#3b82f6);
-
-}
-
-.btn-primary:hover{
-
-    transform:translateY(-2px);
-
-    box-shadow:0 10px 25px rgba(37,99,235,.3);
-
-}
-
-.btn-success{
-
-    background:linear-gradient(135deg,#16a34a,#22c55e);
-
-}
-
-.btn-warning{
-
-    background:linear-gradient(135deg,#f59e0b,#fbbf24);
-
-    color:white;
-
-}
-
-.btn-danger{
-
-    background:linear-gradient(135deg,#dc2626,#ef4444);
-
-}
-
-.btn-secondary{
-
-    background:#64748b;
-
-}
-
-/*============================
-          TABLES
-============================*/
-
-.table{
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    background:white;
-
-}
-
-.table thead{
-
-    background:#2563eb;
-
-    color:white;
-
-}
-
-.table th{
-
-    border:none;
-
-    padding:18px;
-
-}
-
-.table td{
-
-    padding:18px;
-
-    vertical-align:middle;
-
-}
-
-.table tbody tr{
-
-    transition:.3s;
-
-}
-
-.table tbody tr:hover{
-
-    background:#eff6ff;
-
-}
-
-/*============================
-            FORM
-============================*/
-
-.form-control,
-.form-select{
-
-    border-radius:14px;
-
-    border:1px solid #dbe4ef;
-
-    padding:12px 15px;
-
-    transition:.3s;
-
-}
-
-.form-control:focus,
-.form-select:focus{
-
-    border-color:#3b82f6;
-
-    box-shadow:0 0 0 .2rem rgba(59,130,246,.15);
-
-}
-
-/*============================
-          BADGES
-============================*/
-
-.badge{
-
-    border-radius:30px;
-
-    padding:8px 15px;
-
-    font-size:13px;
-
-}
-
-/*============================
-        DASHBOARD TITLE
-============================*/
-
-.page-title{
-
-    font-size:32px;
-
-    font-weight:700;
-
-    color:#1e293b;
-
-}
-
-.page-subtitle{
-
-    color:#64748b;
-
-}
-
-/*============================
-        LISTS
-============================*/
-
-.activity-item{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:space-between;
-
-    padding:15px 0;
-
-    border-bottom:1px solid #edf2f7;
-
-}
-
-.activity-item:last-child{
-
-    border:none;
-
-}
-
-.activity-icon{
-
-    width:45px;
-
-    height:45px;
-
-    border-radius:50%;
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:center;
-
-    color:white;
-
-}
-
-/*============================
-          ALERTS
-============================*/
-
-.alert{
-
-    border:none;
-
-    border-radius:15px;
-
-}
-
-/*============================
-        SCROLLBAR
-============================*/
-
-::-webkit-scrollbar{
-
-    width:9px;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-    background:#3b82f6;
-
-    border-radius:20px;
-
-}
-
-/*============================
-        ANIMATION
-============================*/
-
-.fade-up{
-
-    animation:fadeUp .6s ease;
-
-}
-
-@keyframes fadeUp{
-
-from{
-
-opacity:0;
-
-transform:translateY(20px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-/*============================
-        RESPONSIVE
-============================*/
-
-@media(max-width:992px){
-
-.stat-card{
-
-margin-bottom:20px;
-
-}
-
-.page-title{
-
-font-size:25px;
-
-}
-
-}</style>
-    <!-- En-tête -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h2 class="fw-bold mb-1">Tableau de bord</h2>
-            <p class="text-muted mb-0">
-                Bienvenue,
-                <strong>{{ Auth::user()->prenom }} {{ Auth::user()->nom }}</strong>
-            </p>
-        </div>
-
-        <div>
-            <span class="badge bg-primary fs-6 px-3 py-2">
+<style>
+    /* ============================================
+       DASHBOARD — STYLE GOLD / LUXE
+       ============================================ */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --gold-50: #fefce8;
+        --gold-100: #fef9c3;
+        --gold-200: #fef08a;
+        --gold-300: #fde047;
+        --gold-400: #facc15;
+        --gold-500: #eab308;
+        --gold-600: #ca8a04;
+        --gold-700: #a16207;
+        --gold-800: #854d0e;
+        --gold-900: #713f12;
+        --navy-900: #0f172a;
+        --navy-800: #1e293b;
+        --navy-700: #334155;
+        --navy-600: #475569;
+        --navy-100: #f1f5f9;
+        --navy-50: #f8fafc;
+        --radius-xl: 20px;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --shadow-card: 0 1px 3px rgba(15, 23, 42, 0.04), 0 4px 12px rgba(15, 23, 42, 0.06);
+        --shadow-elevated: 0 4px 12px rgba(15, 23, 42, 0.06), 0 12px 32px rgba(15, 23, 42, 0.1);
+        --shadow-gold: 0 8px 24px rgba(234, 179, 8, 0.2);
+    }
+
+    body {
+        background: var(--navy-50) !important;
+    }
+
+    /* ---------- EN-TÊTE HERO ---------- */
+    .dashboard-hero {
+        background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-800) 50%, var(--navy-700) 100%);
+        border-radius: var(--radius-xl);
+        padding: 2.5rem 2.75rem;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 2.5rem;
+        box-shadow: var(--shadow-elevated);
+    }
+
+    .dashboard-hero::before {
+        content: '';
+        position: absolute;
+        top: -80px;
+        right: -40px;
+        width: 320px;
+        height: 320px;
+        background: radial-gradient(circle, rgba(234, 179, 8, 0.15) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .dashboard-hero::after {
+        content: '';
+        position: absolute;
+        bottom: -100px;
+        left: 20%;
+        width: 240px;
+        height: 240px;
+        background: radial-gradient(circle, rgba(234, 179, 8, 0.08) 0%, transparent 70%);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+
+    .dashboard-hero .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .dashboard-hero h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: #ffffff;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+    }
+
+    .dashboard-hero .hero-subtitle {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 1rem;
+        margin-bottom: 1.75rem;
+        font-weight: 400;
+    }
+
+    .dashboard-hero .hero-subtitle strong {
+        color: var(--gold-300);
+        font-weight: 600;
+    }
+
+    .hero-role-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-400) 100%);
+        color: var(--navy-900);
+        font-size: 0.72rem;
+        font-weight: 700;
+        padding: 0.45em 1.1em;
+        border-radius: 50px;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        margin-left: 0.75rem;
+        vertical-align: middle;
+        box-shadow: 0 4px 12px rgba(234, 179, 8, 0.3);
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn-gold {
+        background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-400) 100%) !important;
+        color: var(--navy-900) !important;
+        border: none !important;
+        border-radius: 50px !important;
+        padding: 0.75rem 1.75rem !important;
+        font-weight: 700;
+        font-size: 0.9rem;
+        letter-spacing: 0.01em;
+        transition: all 0.25s ease;
+        box-shadow: var(--shadow-gold);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-gold:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 28px rgba(234, 179, 8, 0.35);
+        color: var(--navy-900) !important;
+    }
+
+    .btn-ghost-gold {
+        background: rgba(255, 255, 255, 0.06) !important;
+        color: #ffffff !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 50px !important;
+        padding: 0.75rem 1.75rem !important;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.25s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        text-decoration: none;
+    }
+
+    .btn-ghost-gold:hover {
+        background: rgba(255, 255, 255, 0.12) !important;
+        transform: translateY(-2px);
+        color: #ffffff !important;
+    }
+
+    /* ---------- CARTES STATISTIQUES ---------- */
+    .stat-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--radius-xl) !important;
+        padding: 1.75rem;
+        box-shadow: var(--shadow-card);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--gold-500), var(--gold-300));
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .stat-card:hover::before {
+        opacity: 1;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-elevated);
+    }
+
+    .stat-card .stat-icon-wrapper {
+        width: 56px;
+        height: 56px;
+        border-radius: var(--radius-md);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 1.25rem;
+        position: relative;
+    }
+
+    .stat-card .stat-icon-wrapper::after {
+        content: '';
+        position: absolute;
+        inset: -4px;
+        border-radius: inherit;
+        background: inherit;
+        opacity: 0.25;
+        filter: blur(8px);
+    }
+
+    .stat-card .stat-icon-wrapper i {
+        position: relative;
+        z-index: 2;
+    }
+
+    .stat-icon-gold { background: linear-gradient(135deg, #fef08a, #facc15); color: var(--gold-800); }
+    .stat-icon-navy { background: linear-gradient(135deg, #cbd5e1, #94a3b8); color: var(--navy-800); }
+    .stat-icon-emerald { background: linear-gradient(135deg, #a7f3d0, #34d399); color: #065f46; }
+    .stat-icon-rose { background: linear-gradient(135deg, #fecaca, #f87171); color: #991b1b; }
+
+    .stat-value {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.25rem;
+        font-weight: 700;
+        color: var(--navy-900);
+        line-height: 1;
+        margin-bottom: 0.4rem;
+        letter-spacing: -0.02em;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--navy-600);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        margin-bottom: 0;
+    }
+
+    .stat-trend {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        margin-top: 0.75rem;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .trend-up { background: #f0fdf4; color: #16a34a; }
+    .trend-neutral { background: #fef9c3; color: #a16207; }
+
+    /* ---------- CARTES LISTES ---------- */
+    .content-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: var(--radius-xl) !important;
+        box-shadow: var(--shadow-card);
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+    }
+
+    .content-card:hover {
+        box-shadow: var(--shadow-elevated);
+    }
+
+    .content-card .card-header-custom {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 1.4rem 1.75rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .content-card .card-header-custom .card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: var(--navy-900);
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .content-card .card-header-custom .card-title i {
+        color: var(--gold-500);
+        font-size: 1.25rem;
+    }
+
+    .content-card .card-body-custom {
+        padding: 0.5rem 1.75rem 1.5rem;
+    }
+
+    .list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0.25rem;
+        border-bottom: 1px solid #f1f5f9;
+        transition: all 0.2s ease;
+        border-radius: 10px;
+    }
+
+    .list-item:last-child {
+        border-bottom: none !important;
+    }
+
+    .list-item:hover {
+        background: #fefce8;
+        padding-left: 0.75rem;
+        padding-right: 0.75rem;
+    }
+
+    .list-item .list-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        margin-right: 14px;
+        flex-shrink: 0;
+    }
+
+    .list-icon-doc { background: linear-gradient(135deg, #fef9c3, #fde047); color: #854d0e; }
+    .list-icon-meet { background: linear-gradient(135deg, #dbeafe, #93c5fd); color: #1e40af; }
+
+    .list-item .list-title {
+        font-weight: 600;
+        font-size: 0.92rem;
+        color: var(--navy-900);
+        margin: 0;
+        line-height: 1.3;
+    }
+
+    .list-item .list-meta {
+        font-size: 0.78rem;
+        color: var(--navy-600);
+        margin-top: 2px;
+    }
+
+    .list-item .list-meta i {
+        font-size: 0.7rem;
+        margin-right: 3px;
+    }
+
+    .btn-outline-gold {
+        border: 1.5px solid var(--gold-400) !important;
+        color: var(--gold-700) !important;
+        border-radius: 50px !important;
+        font-size: 0.78rem;
+        font-weight: 600;
+        padding: 0.4rem 1.1rem;
+        transition: all 0.2s ease;
+    }
+
+    .btn-outline-gold:hover {
+        background: var(--gold-500) !important;
+        color: var(--navy-900) !important;
+        border-color: var(--gold-500) !important;
+    }
+
+    .btn-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 !important;
+        border: 1.5px solid #e2e8f0 !important;
+        color: var(--navy-600) !important;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .btn-icon:hover {
+        border-color: var(--gold-400) !important;
+        color: var(--gold-700) !important;
+        background: var(--gold-50) !important;
+        transform: scale(1.05);
+    }
+
+    .btn-icon-success {
+        border-color: #bbf7d0 !important;
+        color: #16a34a !important;
+    }
+
+    .btn-icon-success:hover {
+        background: #f0fdf4 !important;
+        color: #15803d !important;
+        border-color: #16a34a !important;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 2.5rem 1rem;
+        color: var(--navy-600);
+    }
+
+    .empty-state i {
+        font-size: 2.5rem;
+        color: var(--gold-300);
+        margin-bottom: 0.75rem;
+        display: block;
+    }
+
+    .empty-state p {
+        margin: 0;
+        font-size: 0.9rem;
+        font-weight: 500;
+    }
+
+    /* ---------- SECTION DIVIDER ---------- */
+    .section-divider {
+        border: none;
+        height: 1px;
+        background: linear-gradient(90deg, transparent 0%, #e2e8f0 20%, #e2e8f0 80%, transparent 100%);
+        margin: 1rem 0 2rem;
+    }
+
+    /* ---------- RESPONSIVE ---------- */
+    @media (max-width: 992px) {
+        .dashboard-hero {
+            padding: 1.75rem 1.5rem;
+        }
+        .dashboard-hero h1 {
+            font-size: 1.75rem;
+        }
+        .hero-actions {
+            flex-direction: column;
+            gap: 8px;
+        }
+        .btn-gold, .btn-ghost-gold {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .dashboard-hero h1 {
+            font-size: 1.5rem;
+        }
+        .hero-role-badge {
+            display: block;
+            margin: 0.5rem 0 0;
+        }
+    }
+</style>
+
+<!-- Hero Section -->
+<div class="dashboard-hero">
+    <div class="hero-content">
+        <h1>
+            Tableau de bord
+            <span class="hero-role-badge">
+                <i class="bi bi-shield-check"></i>
                 {{ ucfirst(Auth::user()->role) }}
+            </span>
+        </h1>
+        <p class="hero-subtitle">
+            Bienvenue, <strong>{{ Auth::user()->prenom }} {{ Auth::user()->nom }}</strong>. Voici un aperçu de votre espace de travail.
+        </p>
+        <div class="hero-actions">
+            <a href="{{ route('documents.create') }}" class="btn-gold">
+                <i class="bi bi-plus-lg"></i> Nouveau document
+            </a>
+            <a href="{{ route('meetings.create') }}" class="btn-ghost-gold">
+                <i class="bi bi-calendar-plus"></i> Nouvelle réunion
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Cartes statistiques -->
+<div class="row g-4 mb-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper stat-icon-gold">
+                <i class="bi bi-folder2-open"></i>
+            </div>
+            <div class="stat-label">Documents</div>
+            <div class="stat-value">{{ $documentsCount ?? 0 }}</div>
+            <span class="stat-trend trend-up">
+                <i class="bi bi-arrow-up-short"></i> Actif
             </span>
         </div>
     </div>
 
-    <!-- Cartes statistiques -->
-    <div class="row g-4 mb-4">
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="bg-primary rounded-circle p-3 me-3">
-                        <i class="bi bi-folder2-open text-white fs-3"></i>
-                    </div>
-
-                    <div>
-                        <small class="text-muted">Documents</small>
-                        <h3 class="fw-bold mb-0">{{ $documentsCount ?? 0 }}</h3>
-                    </div>
-                </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper stat-icon-emerald">
+                <i class="bi bi-calendar-event"></i>
             </div>
+            <div class="stat-label">Réunions</div>
+            <div class="stat-value">{{ $meetingsCount ?? 0 }}</div>
+            <span class="stat-trend trend-up">
+                <i class="bi bi-arrow-up-short"></i> Planifié
+            </span>
         </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="bg-success rounded-circle p-3 me-3">
-                        <i class="bi bi-calendar-event text-white fs-3"></i>
-                    </div>
-
-                    <div>
-                        <small class="text-muted">Réunions</small>
-                        <h3 class="fw-bold mb-0">{{ $meetingsCount ?? 0 }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="bg-warning rounded-circle p-3 me-3">
-                        <i class="bi bi-kanban text-white fs-3"></i>
-                    </div>
-
-                    <div>
-                        <small class="text-muted">Projets</small>
-                        <h3 class="fw-bold mb-0">{{ $projectsCount ?? 0 }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body d-flex align-items-center">
-                    <div class="bg-danger rounded-circle p-3 me-3">
-                        <i class="bi bi-people-fill text-white fs-3"></i>
-                    </div>
-
-                    <div>
-                        <small class="text-muted">Utilisateurs</small>
-                        <h3 class="fw-bold mb-0">{{ $usersCount ?? 0 }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 
-    <!-- Deux colonnes -->
-    <div class="row g-4">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper stat-icon-navy">
+                <i class="bi bi-kanban"></i>
+            </div>
+            <div class="stat-label">Projets</div>
+            <div class="stat-value">{{ $projectsCount ?? 0 }}</div>
+            <span class="stat-trend trend-neutral">
+                <i class="bi bi-dash-circle"></i> En cours
+            </span>
+        </div>
+    </div>
 
-        <!-- Documents -->
-        <div class="col-lg-6">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon-wrapper stat-icon-rose">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <div class="stat-label">Utilisateurs</div>
+            <div class="stat-value">{{ $usersCount ?? 0 }}</div>
+            <span class="stat-trend trend-up">
+                <i class="bi bi-arrow-up-short"></i> Inscrits
+            </span>
+        </div>
+    </div>
+</div>
 
-            <div class="card shadow-sm border-0">
-
-                <div class="card-header bg-white fw-bold">
-                    <i class="bi bi-file-earmark-text text-primary"></i>
+<!-- Deux colonnes -->
+<div class="row g-4">
+    <!-- Documents récents -->
+    <div class="col-lg-6">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <span class="card-title">
+                    <i class="bi bi-file-earmark-text"></i>
                     Documents récents
-                </div>
-
-                <div class="card-body">
-
-                    @forelse($recentDocuments ?? [] as $document)
-
-                        <div class="d-flex justify-content-between border-bottom py-2">
-
-                            <div>
-
-                                <strong>{{ $document->titre }}</strong>
-
-                                <br>
-
-                                <small class="text-muted">
-                                    {{ $document->created_at->format('d/m/Y') }}
-                                </small>
-
+                </span>
+                <a href="{{ route('documents.index') }}" class="btn-outline-gold">
+                    Voir tout <i class="bi bi-arrow-right-short"></i>
+                </a>
+            </div>
+            <div class="card-body-custom">
+                @forelse($recentDocuments ?? [] as $document)
+                    <div class="list-item">
+                        <div class="d-flex align-items-center">
+                            <div class="list-icon list-icon-doc">
+                                <i class="bi bi-file-earmark-text"></i>
                             </div>
-
-                            <i class="bi bi-file-earmark fs-4 text-secondary"></i>
-
+                            <div>
+                                <a href="{{ route('documents.show', $document) }}" class="list-title text-decoration-none">
+                                    {{ $document->titre }}
+                                </a>
+                                <div class="list-meta">
+                                    {{ $document->user?->prenom }} {{ $document->user?->nom }} •
+                                    {{ $document->created_at->format('d/m/Y') }}
+                                </div>
+                            </div>
                         </div>
-
-                    @empty
-
-                        <p class="text-muted text-center py-3">
-                            Aucun document disponible.
-                        </p>
-
-                    @endforelse
-
-                </div>
-
+                        <a href="{{ route('documents.download', $document) }}" class="btn-icon btn-icon-success" title="Télécharger">
+                            <i class="bi bi-download"></i>
+                        </a>
+                    </div>
+                @empty
+                    <div class="empty-state">
+                        <i class="bi bi-inbox"></i>
+                        <p>Aucun document disponible.</p>
+                    </div>
+                @endforelse
             </div>
-
         </div>
+    </div>
 
-        <!-- Réunions -->
-        <div class="col-lg-6">
-
-            <div class="card shadow-sm border-0">
-
-                <div class="card-header bg-white fw-bold">
-                    <i class="bi bi-calendar-check text-success"></i>
+    <!-- Prochaines réunions -->
+    <div class="col-lg-6">
+        <div class="content-card">
+            <div class="card-header-custom">
+                <span class="card-title">
+                    <i class="bi bi-calendar-check"></i>
                     Prochaines réunions
-                </div>
-
-                <div class="card-body">
-
-                    @forelse($upcomingMeetings ?? [] as $meeting)
-
-                        <div class="border-bottom py-2">
-
-                            <strong>{{ $meeting->titre }}</strong>
-
-                            <br>
-
-                            <small class="text-muted">
-
-                                {{ \Carbon\Carbon::parse($meeting->date)->format('d/m/Y') }}
-
-                                •
-
-                                {{ $meeting->heure_debut }}
-
-                            </small>
-
+                </span>
+                <a href="{{ route('meetings.index') }}" class="btn-outline-gold">
+                    Voir tout <i class="bi bi-arrow-right-short"></i>
+                </a>
+            </div>
+            <div class="card-body-custom">
+                @forelse($upcomingMeetings ?? [] as $meeting)
+                    <div class="list-item">
+                        <div class="d-flex align-items-center">
+                            <div class="list-icon list-icon-meet">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+                            <div>
+                                <a href="{{ route('meetings.show', $meeting) }}" class="list-title text-decoration-none">
+                                    {{ $meeting->titre }}
+                                </a>
+                                <div class="list-meta">
+                                    <i class="bi bi-calendar"></i>
+                                    {{ \Carbon\Carbon::parse($meeting->date)->format('d/m/Y') }}
+                                    <span class="mx-1">•</span>
+                                    <i class="bi bi-clock"></i>
+                                    {{ \Carbon\Carbon::parse($meeting->heure_debut)->format('H:i') }}
+                                    -
+                                    {{ \Carbon\Carbon::parse($meeting->heure_fin)->format('H:i') }}
+                                </div>
+                                <div class="list-meta">
+                                    <i class="bi bi-people"></i>
+                                    {{ $meeting->participants->count() }} participant(s)
+                                </div>
+                            </div>
                         </div>
-
-                    @empty
-
-                        <p class="text-muted text-center py-3">
-                            Aucune réunion programmée.
-                        </p>
-
-                    @endforelse
-
-                </div>
-
+                        <a href="{{ route('meetings.ics', $meeting) }}" class="btn-icon" title="Télécharger ICS">
+                            <i class="bi bi-calendar-event"></i>
+                        </a>
+                    </div>
+                @empty
+                    <div class="empty-state">
+                        <i class="bi bi-calendar-x"></i>
+                        <p>Aucune réunion programmée.</p>
+                    </div>
+                @endforelse
             </div>
-
         </div>
-
     </div>
-
-    
-            </div>
-
-        </div>
-
-    </div>
-
 </div>
 
 @endsection

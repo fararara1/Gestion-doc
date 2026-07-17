@@ -119,7 +119,7 @@ class MeetingController extends Controller
 
     private function sendInvitations(Meeting $meeting): void
     {
-        $meeting->load(['participants', 'documents']);
+        $meeting->load(['organisateur', 'participants', 'documents']);
 
         foreach ($meeting->participants as $participant) {
             Mail::to($participant->email)->send(new MeetingInvitation($meeting));

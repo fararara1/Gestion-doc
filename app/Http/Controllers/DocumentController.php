@@ -10,7 +10,6 @@ use App\Models\Department;
 use App\Models\Document;
 use App\Models\Project;
 use App\Models\User;
-use App\Notifications\DocumentShared;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,7 +25,8 @@ class DocumentController extends Controller
                 });
             })
             ->when(request('recherche'), function ($query, $recherche) {
-                $query->where('titre', 'like', "%{$recherche}%");
+                $query->where('titre', 'like', "%{$recherche}%")
+                    ->orWhere('description', 'like', "%{$recherche}%");
             })
             ->when(request('project_id'), fn ($query, $id) => $query->where('project_id', $id))
             ->when(request('category_id'), fn ($query, $id) => $query->where('category_id', $id))
@@ -142,13 +142,6 @@ class DocumentController extends Controller
             ->toArray();
 
         $document->sharedWith()->syncWithoutDetaching($pivotData);
-
-        foreach ($data['user_ids'] as $userId) {
-            $user = User::find($userId);
-            if ($user) {
-                $user->notify(new DocumentShared($document, $data['droit']));
-            }
-        }
 
         return redirect()->route('documents.index')
             ->with('success', 'Document partagé avec succès.');

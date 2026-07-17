@@ -35,7 +35,7 @@ class ProjectController extends Controller
 
     public function show(Project $project)
     {
-        $project->loadCount('documents');
+        $project->load(['department', 'documents.category', 'documents.user']);
 
         return view('projects.show', compact('project'));
     }
