@@ -9,14 +9,10 @@ use App\Models\Meeting;
 use App\Models\User;
 use App\Mail\MeetingInvitation;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class MeetingController extends Controller
 {
-    /**
-     * Liste des réunions.
-     * Administrateur : voit toutes les réunions.
-     * Collaborateur : voit celles qu'il organise + celles où il est participant.
-     */
     public function index()
     {
         $meetings = Meeting::with(['organisateur', 'participants'])
@@ -42,33 +38,30 @@ class MeetingController extends Controller
     }
 
     public function store(StoreMeetingRequest $request)
-{
-    $validated = $request->validated();
+    {
+        $validated = $request->validated();
 
-    $meeting = Meeting::create([
-        'titre' => $validated['titre'],
-        'description' => $validated['description'] ?? null,
-        'date' => $validated['date'],
-        'heure_debut' => $validated['heure_debut'],
-        'heure_fin' => $validated['heure_fin'],
-        'user_id' => auth()->id(),
-    ]);
+        $meeting = Meeting::create([
+            'titre' => $validated['titre'],
+            'description' => $validated['description'] ?? null,
+            'date' => $validated['date'],
+            'heure_debut' => $validated['heure_debut'],
+            'heure_fin' => $validated['heure_fin'],
+            'user_id' => auth()->id(),
+        ]);
 
-    $meeting->participants()->sync($validated['participant_ids'] ?? []);
-    $meeting->documents()->sync($validated['document_ids'] ?? []);
+        $meeting->participants()->sync($validated['participant_ids'] ?? []);
+        $meeting->documents()->sync($validated['document_ids'] ?? []);
 
-    $meeting->load(['participants', 'documents']);
+        $this->sendInvitations($meeting);
 
-    foreach ($meeting->participants as $participant) {
-        Mail::to($participant->email)->queue(new MeetingInvitation($meeting));
+        return redirect()->route('meetings.index')
+            ->with('success', 'Réunion créée avec succès. Les invitations ont été envoyées.');
     }
 
-    return redirect()->route('meetings.index')
-        ->with('success', 'Réunion créée avec succès. Les invitations ont été envoyées.');
-}
     public function show(Meeting $meeting)
     {
-        $this->authorizeAccess($meeting);
+        $this->authorize('view', $meeting);
 
         $meeting->load(['organisateur', 'participants', 'documents']);
 
@@ -77,9 +70,7 @@ class MeetingController extends Controller
 
     public function edit(Meeting $meeting)
     {
-        if (! auth()->user()->isAdmin() && auth()->id() !== $meeting->user_id) {
-            abort(403, 'Vous n\'êtes pas autorisé à modifier cette réunion.');
-        }
+        $this->authorize('update', $meeting);
 
         $meeting->load(['participants', 'documents']);
         $users = User::orderBy('nom')->get();
@@ -89,30 +80,25 @@ class MeetingController extends Controller
     }
 
     public function update(UpdateMeetingRequest $request, Meeting $meeting)
-{
-    $data = $request->validated();
+    {
+        $this->authorize('update', $meeting);
 
-    $meeting->update($data);
+        $data = $request->validated();
 
-    $meeting->participants()->sync($data['participant_ids']);
-    $meeting->documents()->sync($data['document_ids'] ?? []);
+        $meeting->update($data);
 
-    // Renvoie l'invitation mise à jour à tous les participants actuels
-    $meeting->load(['participants', 'documents']);
+        $meeting->participants()->sync($data['participant_ids']);
+        $meeting->documents()->sync($data['document_ids'] ?? []);
 
-    foreach ($meeting->participants as $participant) {
-        Mail::to($participant->email)->send(new MeetingInvitation($meeting));
+        $this->sendInvitations($meeting);
+
+        return redirect()->route('meetings.index')
+            ->with('success', 'Réunion mise à jour avec succès. Les invitations ont été renvoyées.');
     }
-
-    return redirect()->route('meetings.index')
-        ->with('success', 'Réunion mise à jour avec succès. Les invitations ont été renvoyées.');
-}
 
     public function destroy(Meeting $meeting)
     {
-        if (! auth()->user()->isAdmin() && auth()->id() !== $meeting->user_id) {
-            abort(403, 'Vous n\'êtes pas autorisé à supprimer cette réunion.');
-        }
+        $this->authorize('delete', $meeting);
 
         $meeting->delete();
 
@@ -120,17 +106,23 @@ class MeetingController extends Controller
             ->with('success', 'Réunion supprimée avec succès.');
     }
 
-    /**
-     * Vérifie que l'utilisateur peut consulter la réunion (organisateur, admin, ou participant).
-     */
-    private function authorizeAccess(Meeting $meeting): void
+    public function downloadIcs(Meeting $meeting)
     {
-        $user = auth()->user();
+        $this->authorize('view', $meeting);
 
-        $isParticipant = $meeting->participants()->where('users.id', $user->id)->exists();
+        $fileName = 'reunion-' . $meeting->id . '-' . Str::slug($meeting->titre) . '.ics';
 
-        if (! $user->isAdmin() && $user->id !== $meeting->user_id && ! $isParticipant) {
-            abort(403, 'Vous n\'avez pas accès à cette réunion.');
+        return response($meeting->toIcs(), 200)
+            ->header('Content-Type', 'text/calendar; charset=utf-8')
+            ->header('Content-Disposition', 'attachment; filename="' . $fileName . '"');
+    }
+
+    private function sendInvitations(Meeting $meeting): void
+    {
+        $meeting->load(['participants', 'documents']);
+
+        foreach ($meeting->participants as $participant) {
+            Mail::to($participant->email)->send(new MeetingInvitation($meeting));
         }
     }
 }

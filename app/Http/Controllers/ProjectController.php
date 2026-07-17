@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
+use App\Models\Department;
 use App\Models\Project;
 
 class ProjectController extends Controller
@@ -19,7 +20,9 @@ class ProjectController extends Controller
 
     public function create()
     {
-        return view('projects.create');
+        $departments = Department::orderBy('nom')->get();
+
+        return view('projects.create', compact('departments'));
     }
 
     public function store(StoreProjectRequest $request)
@@ -30,9 +33,18 @@ class ProjectController extends Controller
             ->with('success', 'Projet créé avec succès.');
     }
 
+    public function show(Project $project)
+    {
+        $project->loadCount('documents');
+
+        return view('projects.show', compact('project'));
+    }
+
     public function edit(Project $project)
     {
-        return view('projects.edit', compact('project'));
+        $departments = Department::orderBy('nom')->get();
+
+        return view('projects.edit', compact('project', 'departments'));
     }
 
     public function update(UpdateProjectRequest $request, Project $project)
@@ -45,7 +57,6 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        // Empêcher la suppression d'un projet encore lié à des documents
         if ($project->documents()->exists()) {
             return redirect()->route('projects.index')
                 ->with('error', 'Impossible de supprimer ce projet : des documents y sont rattachés.');

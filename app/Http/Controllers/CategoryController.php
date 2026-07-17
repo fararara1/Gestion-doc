@@ -30,6 +30,13 @@ class CategoryController extends Controller
             ->with('success', 'Catégorie créée avec succès.');
     }
 
+    public function show(Category $category)
+    {
+        $category->loadCount('documents');
+
+        return view('categories.show', compact('category'));
+    }
+
     public function edit(Category $category)
     {
         return view('categories.edit', compact('category'));

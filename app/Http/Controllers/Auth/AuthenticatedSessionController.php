@@ -28,6 +28,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        $redirectTo = $request->input('redirect');
+
+        if ($redirectTo && filter_var($redirectTo, FILTER_VALIDATE_URL) === false && str_starts_with($redirectTo, '/')) {
+            return redirect()->to($redirectTo);
+        }
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 

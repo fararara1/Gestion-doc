@@ -475,6 +475,21 @@ h1,h2,h3,h4,h5{
                 </div>
             @endif
 
+            @if(auth()->check() && auth()->user()->unreadNotifications->count() > 0)
+                <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <strong>Notifications :</strong>
+                    <ul class="mb-0 mt-2">
+                        @foreach(auth()->user()->unreadNotifications->take(5) as $notification)
+                            <li>
+                                {{ $notification->data['message'] ?? $notification->type }}
+                                <a href="{{ route('notifications.index') }}" class="alert-link">Voir tout</a>
+                            </li>
+                        @endforeach
+                    </ul>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </div>

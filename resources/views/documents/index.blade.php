@@ -65,8 +65,6 @@
                 @forelse($documents as $document)
                     @php
                         $canManage = auth()->user()->isAdmin() || auth()->id() === $document->user_id;
-                        $sharedIds = $document->sharedWith->pluck('id')->push($document->user_id);
-                        $availableUsers = $allUsers->whereNotIn('id', $sharedIds);
                     @endphp
                     <tr>
                         <td>{{ $document->titre }}</td>
@@ -100,75 +98,6 @@
                             @endif
                         </td>
                     </tr>
-
-                    @if($canManage)
-                        <!-- Modale de partage pour ce document -->
-                        <div class="modal fade" id="shareModal{{ $document->id }}" tabindex="-1" aria-hidden="true">
-                            <div class="modal-dialog modal-lg modal-dialog-centered">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">
-                                            <i class="bi bi-share"></i> Partager « {{ $document->titre }} »
-                                        </h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <h6>Ajouter des collaborateurs</h6>
-                                                <form method="POST" action="{{ route('documents.share.store', $document) }}">
-                                                    @csrf
-                                                    <div class="mb-2">
-                                                        <select name="user_ids[]" class="form-select" multiple size="6">
-                                                            @forelse($availableUsers as $user)
-                                                                <option value="{{ $user->id }}">
-                                                                    {{ $user->prenom }} {{ $user->nom }}
-                                                                </option>
-                                                            @empty
-                                                                <option disabled>Aucun collaborateur disponible</option>
-                                                            @endforelse
-                                                        </select>
-                                                        <small class="text-muted">Ctrl/Cmd pour multi-sélection.</small>
-                                                    </div>
-                                                    <div class="mb-2">
-                                                        <select name="droit" class="form-select">
-                                                            <option value="lecture">Lecture</option>
-                                                            <option value="modification">Modification</option>
-                                                        </select>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-primary btn-sm">
-                                                        <i class="bi bi-share"></i> Partager
-                                                    </button>
-                                                </form>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <h6>Déjà partagé avec</h6>
-                                                @forelse($document->sharedWith as $sharedUser)
-                                                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-                                                        <div>
-                                                            {{ $sharedUser->prenom }} {{ $sharedUser->nom }}
-                                                            <span class="badge {{ $sharedUser->pivot->droit === 'modification' ? 'bg-warning text-dark' : 'bg-secondary' }}">
-                                                                {{ ucfirst($sharedUser->pivot->droit) }}
-                                                            </span>
-                                                        </div>
-                                                        <form action="{{ route('documents.share.destroy', [$document, $sharedUser]) }}" method="POST" onsubmit="return confirm('Révoquer ce partage ?');">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                                <i class="bi bi-x-lg"></i>
-                                                            </button>
-                                                        </form>
-                                                    </div>
-                                                @empty
-                                                    <p class="text-muted small mb-0">Pas encore partagé.</p>
-                                                @endforelse
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endif
                 @empty
                     <tr>
                         <td colspan="7" class="text-center text-muted py-4">Aucun document trouvé.</td>
@@ -181,4 +110,82 @@
         {{ $documents->links() }}
     </div>
 </div>
+
+@if(isset($documents) && $documents->count() > 0)
+    @php
+        $manageableDocuments = $documents->filter(fn($d) => auth()->user()->isAdmin() || auth()->id() === $d->user_id);
+    @endphp
+
+    @foreach($manageableDocuments as $document)
+        @php
+            $sharedIds = $document->sharedWith->pluck('id')->push($document->user_id);
+            $availableUsers = $allUsers->whereNotIn('id', $sharedIds);
+        @endphp
+        <div class="modal fade" id="shareModal{{ $document->id }}" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">
+                            <i class="bi bi-share"></i> Partager « {{ $document->titre }} »
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <h6>Ajouter des collaborateurs</h6>
+                                <form method="POST" action="{{ route('documents.share.store', $document) }}">
+                                    @csrf
+                                    <div class="mb-2">
+                                        <select name="user_ids[]" class="form-select" multiple size="6">
+                                            @forelse($availableUsers as $user)
+                                                <option value="{{ $user->id }}">
+                                                    {{ $user->prenom }} {{ $user->nom }}
+                                                </option>
+                                            @empty
+                                                <option disabled>Aucun collaborateur disponible</option>
+                                            @endforelse
+                                        </select>
+                                        <small class="text-muted">Ctrl/Cmd pour multi-sélection.</small>
+                                    </div>
+                                    <div class="mb-2">
+                                        <select name="droit" class="form-select">
+                                            <option value="lecture">Lecture</option>
+                                            <option value="modification">Modification</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="bi bi-share"></i> Partager
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Déjà partagé avec</h6>
+                                @forelse($document->sharedWith as $sharedUser)
+                                    <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                                        <div>
+                                            {{ $sharedUser->prenom }} {{ $sharedUser->nom }}
+                                            <span class="badge {{ $sharedUser->pivot->droit === 'modification' ? 'bg-warning text-dark' : 'bg-secondary' }}">
+                                                {{ ucfirst($sharedUser->pivot->droit) }}
+                                            </span>
+                                        </div>
+                                        <form action="{{ route('documents.share.destroy', [$document, $sharedUser]) }}" method="POST" onsubmit="return confirm('Révoquer ce partage ?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                @empty
+                                    <p class="text-muted small mb-0">Pas encore partagé.</p>
+                                @endforelse
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+@endif
 @endsection

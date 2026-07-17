@@ -10,23 +10,19 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class MeetingInvitation extends Mailable implements ShouldQueue
+class MeetingInvitation extends Mailable
 {
     use Queueable, SerializesModels;
 
     public Meeting $meeting;
+    public string $platformUrl;
 
-    /**
-     * Create a new message instance.
-     */
-    public function __construct(Meeting $meeting)
+    public function __construct(Meeting $meeting, ?string $platformUrl = null)
     {
         $this->meeting = $meeting;
+        $this->platformUrl = $platformUrl ?? config('app.url');
     }
 
-    /**
-     * Get the message envelope.
-     */
     public function envelope(): Envelope
     {
         return new Envelope(
@@ -34,21 +30,22 @@ class MeetingInvitation extends Mailable implements ShouldQueue
         );
     }
 
-    /**
-     * Get the message content definition.
-     */
     public function content(): Content
     {
         return new Content(
-            view: 'emails.meeting-invitation',
+            view: 'emails.meetings.invitation',
         );
     }
 
-    /**
-     * Get the attachments for the message.
-     */
     public function attachments(): array
     {
-        return [];
+        $fileName = 'reunion-' . $this->meeting->id . '-' . \Illuminate\Support\Str::slug($this->meeting->titre) . '.ics';
+
+        return [
+            \Illuminate\Mail\Mailables\Attachment::fromData(
+                fn () => $this->meeting->toIcs(),
+                $fileName
+            )->withMime('text/calendar'),
+        ];
     }
 }

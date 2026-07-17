@@ -4,6 +4,7 @@
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
+        <input type="hidden" name="redirect" value="{{ request('redirect') }}">
 
         <!-- Email Address -->
         <div>
