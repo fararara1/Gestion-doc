@@ -14,52 +14,49 @@ class DashboardController extends Controller
         $user = auth()->user();
 
         if ($user->isAdmin()) {
-            $documentsCount = Document::count();
-            $meetingsCount = Meeting::count();
-            $projectsCount = Project::count();
-            $usersCount = User::count();
-
-            $recentDocuments = Document::latest()->take(5)->get();
-            $upcomingMeetings = Meeting::where('date', '>=', now()->toDateString())
-                ->orderBy('date')
-                ->take(5)
-                ->get();
+            $stats = $this->adminStats();
         } else {
-            $documentsCount = Document::where('user_id', $user->id)
-                ->orWhereHas('sharedWith', fn ($q) => $q->where('users.id', $user->id))
-                ->count();
-
-            $meetingsCount = Meeting::where('user_id', $user->id)
-                ->orWhereHas('participants', fn ($q) => $q->where('users.id', $user->id))
-                ->count();
-
-            $projectsCount = Project::where('department_id', $user->department_id)->count();
-
-            $usersCount = User::where('department_id', $user->department_id)->count();
-
-            $recentDocuments = Document::where('user_id', $user->id)
-                ->orWhereHas('sharedWith', fn ($q) => $q->where('users.id', $user->id))
-                ->latest()
-                ->take(5)
-                ->get();
-
-            $upcomingMeetings = Meeting::where(function ($query) use ($user) {
-                    $query->where('user_id', $user->id)
-                        ->orWhereHas('participants', fn ($q2) => $q2->where('users.id', $user->id));
-                })
-                ->where('date', '>=', now()->toDateString())
-                ->orderBy('date')
-                ->take(5)
-                ->get();
+            $stats = $this->userStats($user);
         }
 
-        return view('dashboard', compact(
-            'usersCount',
-            'projectsCount',
-            'documentsCount',
-            'meetingsCount',
-            'recentDocuments',
-            'upcomingMeetings'
-        ));
+        return view('dashboard', $stats);
+    }
+
+    private function adminStats(): array
+    {
+        return [
+            'usersCount' => User::count(),
+            'projectsCount' => Project::count(),
+            'documentsCount' => Document::count(),
+            'meetingsCount' => Meeting::count(),
+            'recentDocuments' => Document::latest()->take(5)->get(),
+            'upcomingMeetings' => Meeting::where('date', '>=', now()->toDateString())
+                ->orderBy('date')
+                ->take(5)
+                ->get(),
+        ];
+    }
+
+    private function userStats(User $user): array
+    {
+        $documentQuery = Document::where('user_id', $user->id)
+            ->orWhereHas('sharedWith', fn ($q) => $q->where('users.id', $user->id));
+
+        $meetingQuery = Meeting::where(function ($query) use ($user) {
+                $query->where('user_id', $user->id)
+                    ->orWhereHas('participants', fn ($q2) => $q2->where('users.id', $user->id));
+            })
+            ->where('date', '>=', now()->toDateString());
+
+        return [
+            'documentsCount' => $documentQuery->count(),
+            'meetingsCount' => Meeting::where('user_id', $user->id)
+                ->orWhereHas('participants', fn ($q) => $q->where('users.id', $user->id))
+                ->count(),
+            'projectsCount' => Project::where('department_id', $user->department_id)->count(),
+            'usersCount' => User::where('department_id', $user->department_id)->count(),
+            'recentDocuments' => $documentQuery->latest()->take(5)->get(),
+            'upcomingMeetings' => $meetingQuery->orderBy('date')->take(5)->get(),
+        ];
     }
 }

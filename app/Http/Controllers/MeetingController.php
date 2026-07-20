@@ -72,7 +72,6 @@ class MeetingController extends Controller
     {
         $this->authorize('update', $meeting);
 
-        $meeting->load(['participants', 'documents']);
         $users = User::orderBy('nom')->get();
         $documents = Document::orderBy('titre')->get();
 
@@ -119,7 +118,7 @@ class MeetingController extends Controller
 
     private function sendInvitations(Meeting $meeting): void
     {
-        $meeting->load(['organisateur', 'participants', 'documents']);
+        $meeting->loadMissing(['organisateur', 'participants', 'documents']);
 
         foreach ($meeting->participants as $participant) {
             Mail::to($participant->email)->send(new MeetingInvitation($meeting));

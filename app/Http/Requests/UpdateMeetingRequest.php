@@ -8,17 +8,14 @@ class UpdateMeetingRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $meeting = $this->route('meeting');
-
-        // Seul l'organisateur (créateur) ou un administrateur peut modifier
-        return $this->user()?->isAdmin() || $this->user()->id === $meeting->user_id;
+        return $this->user() !== null;
     }
 
     public function rules(): array
     {
         return [
             'titre' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'date' => ['required', 'date'],
             'heure_debut' => ['required', 'date_format:H:i'],
             'heure_fin' => ['required', 'date_format:H:i', 'after:heure_debut'],
@@ -33,11 +30,15 @@ class UpdateMeetingRequest extends FormRequest
     {
         return [
             'titre.required' => 'Le titre est obligatoire.',
+            'titre.max' => 'Le titre ne doit pas dépasser 255 caractères.',
+            'description.max' => 'La description ne doit pas dépasser 5000 caractères.',
             'date.required' => 'La date est obligatoire.',
             'heure_debut.required' => 'L\'heure de début est obligatoire.',
             'heure_fin.required' => 'L\'heure de fin est obligatoire.',
             'heure_fin.after' => 'L\'heure de fin doit être après l\'heure de début.',
             'participant_ids.required' => 'Sélectionnez au moins un participant.',
+            'participant_ids.min' => 'Sélectionnez au moins un participant.',
+            'participant_ids.*.exists' => 'Un des participants sélectionnés est invalide.',
         ];
     }
 }

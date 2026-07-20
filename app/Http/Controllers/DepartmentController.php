@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Department;
 use App\Http\Requests\DepartmentRequest;
+use App\Models\Department;
 use Illuminate\Http\Request;
 
 class DepartmentController extends Controller
 {
-    public function index(Request $request)
+    public function index(\Illuminate\Http\Request $request)
     {
-        $search = $request->search;
+        $search = $request->query('search');
 
-        $departments = Department::when($search, function ($q) use ($search) {
-                $q->where('nom', 'like', "%$search%");
+        $departments = Department::when($search, function ($q, $search) {
+                $q->where('nom', 'like', "%{$search}%");
             })
             ->latest()
             ->paginate(10);

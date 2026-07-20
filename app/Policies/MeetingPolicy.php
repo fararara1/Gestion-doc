@@ -9,9 +9,13 @@ class MeetingPolicy
 {
     public function view(User $user, Meeting $meeting): bool
     {
-        return $user->isAdmin()
-            || $user->id === $meeting->user_id
-            || $meeting->participants()->where('users.id', $user->id)->exists();
+        if ($user->isAdmin() || $user->id === $meeting->user_id) {
+            return true;
+        }
+
+        return $meeting->relationLoaded('participants')
+            ? $meeting->participants->contains('id', $user->id)
+            : $meeting->participants()->where('users.id', $user->id)->exists();
     }
 
     public function update(User $user, Meeting $meeting): bool

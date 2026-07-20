@@ -9,9 +9,13 @@ class DocumentPolicy
 {
     public function view(User $user, Document $document): bool
     {
-        return $user->isAdmin()
-            || $user->id === $document->user_id
-            || $document->sharedWith()->where('users.id', $user->id)->exists();
+        if ($user->isAdmin() || $user->id === $document->user_id) {
+            return true;
+        }
+
+        return $document->relationLoaded('sharedWith')
+            ? $document->sharedWith->contains('id', $user->id)
+            : $document->sharedWith()->where('users.id', $user->id)->exists();
     }
 
     public function update(User $user, Document $document): bool
@@ -20,10 +24,17 @@ class DocumentPolicy
             return true;
         }
 
-        return $document->sharedWith()
-            ->where('users.id', $user->id)
-            ->wherePivot('droit', 'modification')
-            ->exists();
+        if (! $document->relationLoaded('sharedWith')) {
+            return $document->sharedWith()
+                ->where('users.id', $user->id)
+                ->wherePivot('droit', 'modification')
+                ->exists();
+        }
+
+        return $document->sharedWith
+            ->where('id', $user->id)
+            ->where('pivot.droit', 'modification')
+            ->isNotEmpty();
     }
 
     public function delete(User $user, Document $document): bool

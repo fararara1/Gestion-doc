@@ -18,7 +18,7 @@ class UpdateProjectRequest extends FormRequest
 
         return [
             'nom' => ['required', 'string', 'max:255', Rule::unique('projects', 'nom')->ignore($projectId)],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:5000'],
             'date_debut' => ['nullable', 'date'],
             'date_fin' => ['nullable', 'date', 'after_or_equal:date_debut'],
             'statut' => ['nullable', 'in:En attente,En cours,Terminé'],
@@ -31,6 +31,8 @@ class UpdateProjectRequest extends FormRequest
         return [
             'nom.required' => 'Le nom du projet est obligatoire.',
             'nom.unique' => 'Ce projet existe déjà.',
+            'nom.max' => 'Le nom du projet ne doit pas dépasser 255 caractères.',
+            'description.max' => 'La description ne doit pas dépasser 5000 caractères.',
             'date_fin.after_or_equal' => 'La date de fin doit être postérieure ou égale à la date de début.',
         ];
     }

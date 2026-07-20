@@ -45,7 +45,7 @@
                 </option>
             @endforeach
         </select>
-        <small class="text-muted">Ctrl/Cmd pour sélectionner plusieurs participants.</small>
+        <small class="text-navy-600">Ctrl/Cmd pour sélectionner plusieurs participants.</small>
         @error('participant_ids') <div class="invalid-feedback d-block">{{ $message }}</div> @enderror
     </div>
 
@@ -61,7 +61,7 @@
                 </option>
             @endforeach
         </select>
-        <small class="text-muted">Optionnel. Ctrl/Cmd pour sélectionner plusieurs documents.</small>
+        <small class="text-navy-600">Optionnel. Ctrl/Cmd pour sélectionner plusieurs documents.</small>
     </div>
 </div>
 <hr class="my-4">

@@ -32,11 +32,14 @@ class UpdateUserRequest extends FormRequest
             'nom.required' => 'Le nom est obligatoire.',
             'prenom.required' => 'Le prénom est obligatoire.',
             'email.required' => 'L\'email professionnel est obligatoire.',
+            'email.email' => 'L\'email doit être une adresse valide.',
             'email.unique' => 'Cet email est déjà utilisé.',
+            'password.min' => 'Le mot de passe doit contenir au moins 8 caractères.',
             'password.confirmed' => 'La confirmation du mot de passe ne correspond pas.',
             'department_id.required' => 'Le service est obligatoire.',
             'department_id.exists' => 'Le service sélectionné est invalide.',
             'role.required' => 'Le rôle est obligatoire.',
+            'role.in' => 'Le rôle sélectionné est invalide.',
         ];
     }
 }

@@ -54,10 +54,10 @@
         @error('fichier') <div class="invalid-feedback">{{ $message }}</div> @enderror
         @if(isset($document) && $document->fichier)
             <div class="mt-2 d-flex align-items-center gap-2">
-                <i class="bi bi-file-earmark-text text-primary"></i>
-                <small class="text-muted">Fichier actuel : {{ basename($document->fichier) }}</small>
-                <a href="{{ route('documents.download', $document) }}" class="btn btn-sm btn-outline-success">
-                    <i class="bi bi-download"></i> Télécharger
+                <i class="bi bi-file-earmark-text" style="color: var(--gold-600);"></i>
+                <small class="text-navy-600">Fichier actuel : {{ basename($document->fichier) }}</small>
+                <a href="{{ route('documents.download', $document) }}" class="btn btn-sm btn-success btn-icon">
+                    <i class="bi bi-download"></i>
                 </a>
             </div>
         @endif

@@ -203,13 +203,13 @@
                 </div>
 
                 @if (session('status'))
-                    <div class="alert alert-success" style="border-radius: var(--radius-sm); margin-bottom: 20px; background: #fefce8; border-left: 4px solid var(--gold-500); color: var(--gold-700);">
+                    <div class="alert alert-success" role="alert">
                         {{ session('status') }}
                     </div>
                 @endif
 
                 @if ($errors->any())
-                    <div class="alert alert-danger" style="border-radius: var(--radius-sm); margin-bottom: 20px; background: #fef2f2; border-left: 4px solid #dc2626; color: #991b1b;">
+                    <div class="alert alert-danger" role="alert">
                         <ul class="mb-0 ps-3">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -218,7 +218,7 @@
                     </div>
                 @endif
 
-                @yield('content')
+                {{ $slot }}
             </div>
         </div>
 

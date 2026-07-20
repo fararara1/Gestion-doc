@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ShareDocumentRequest;
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
 use App\Models\Category;
@@ -35,9 +34,7 @@ class DocumentController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        $projects = Project::orderBy('nom')->get();
-        $categories = Category::orderBy('nom')->get();
-        $departments = Department::orderBy('nom')->get();
+        [$projects, $categories, $departments] = $this->selectLists();
         $allUsers = User::orderBy('nom')->get();
 
         return view('documents.index', compact('documents', 'projects', 'categories', 'departments', 'allUsers'));
@@ -45,9 +42,7 @@ class DocumentController extends Controller
 
     public function create()
     {
-        $projects = Project::orderBy('nom')->get();
-        $categories = Category::orderBy('nom')->get();
-        $departments = Department::orderBy('nom')->get();
+        [$projects, $categories, $departments] = $this->selectLists();
 
         return view('documents.create', compact('projects', 'categories', 'departments'));
     }
@@ -69,18 +64,15 @@ class DocumentController extends Controller
         $this->authorize('view', $document);
 
         $document->load(['user', 'project', 'category', 'department', 'sharedWith']);
-        $allUsers = User::orderBy('nom')->get();
 
-        return view('documents.show', compact('document', 'allUsers'));
+        return view('documents.show', compact('document'));
     }
 
     public function edit(Document $document)
     {
         $this->authorize('update', $document);
 
-        $projects = Project::orderBy('nom')->get();
-        $categories = Category::orderBy('nom')->get();
-        $departments = Department::orderBy('nom')->get();
+        [$projects, $categories, $departments] = $this->selectLists();
 
         return view('documents.edit', compact('document', 'projects', 'categories', 'departments'));
     }
@@ -155,5 +147,14 @@ class DocumentController extends Controller
 
         return redirect()->route('documents.index')
             ->with('success', 'Partage révoqué avec succès.');
+    }
+
+    private function selectLists(): array
+    {
+        return [
+            Project::orderBy('nom')->get(),
+            Category::orderBy('nom')->get(),
+            Department::orderBy('nom')->get()->unique('nom'),
+        ];
     }
 }

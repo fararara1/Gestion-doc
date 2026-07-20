@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Document extends Model
 {
@@ -16,7 +17,11 @@ class Document extends Model
         'user_id',
     ];
 
-    // Auteur du document
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -37,16 +42,14 @@ class Document extends Model
         return $this->belongsTo(Department::class);
     }
 
-    // Utilisateurs avec qui le document est partagé (+ droit)
-    public function sharedWith()
+    public function sharedWith(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'document_user')
             ->withPivot('droit')
             ->withTimestamps();
     }
 
-    // Réunions associées au document
-    public function meetings()
+    public function meetings(): BelongsToMany
     {
         return $this->belongsToMany(Meeting::class, 'document_meeting')
             ->withTimestamps();

@@ -8,6 +8,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\MeetingController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Document;
 
 Route::get('/', fn () => redirect()->route('dashboard'));
 
@@ -27,6 +28,9 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
     Route::post('documents/{document}/partage', [DocumentController::class, 'shareStore'])->name('documents.share.store');
+    Route::get('documents/{document}/partage', function (Document $document) {
+        return redirect()->route('documents.index');
+    })->name('documents.share.redirect');
     Route::delete('documents/{document}/partage/{user}', [DocumentController::class, 'shareDestroy'])->name('documents.share.destroy');
     Route::get('meetings/{meeting}/ics', [MeetingController::class, 'downloadIcs'])->name('meetings.ics');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

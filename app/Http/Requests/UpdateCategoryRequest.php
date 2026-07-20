@@ -26,6 +26,7 @@ class UpdateCategoryRequest extends FormRequest
         return [
             'nom.required' => 'Le nom de la catégorie est obligatoire.',
             'nom.unique' => 'Cette catégorie existe déjà.',
+            'nom.max' => 'Le nom de la catégorie ne doit pas dépasser 255 caractères.',
         ];
     }
 }

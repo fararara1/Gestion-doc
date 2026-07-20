@@ -9,7 +9,7 @@ class DepartmentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->isAdmin() ?? false;
     }
 
     public function rules(): array
@@ -18,7 +18,7 @@ class DepartmentRequest extends FormRequest
 
         return [
             'nom' => ['required', 'string', 'max:255', Rule::unique('departments', 'nom')->ignore($departmentId)],
-            'description' => ['nullable', 'string'],
+            'description' => ['nullable', 'string', 'max:1000'],
         ];
     }
 
@@ -27,6 +27,8 @@ class DepartmentRequest extends FormRequest
         return [
             'nom.required' => 'Le nom du département est obligatoire.',
             'nom.unique' => 'Ce département existe déjà.',
+            'nom.max' => 'Le nom du département ne doit pas dépasser 255 caractères.',
+            'description.max' => 'La description ne doit pas dépasser 1000 caractères.',
         ];
     }
 }

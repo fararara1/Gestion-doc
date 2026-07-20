@@ -8,18 +8,15 @@ class UpdateDocumentRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        $document = $this->route('document');
-
-        // Seul l'auteur ou un administrateur peut modifier le document
-        return $this->user()?->isAdmin() || $this->user()->id === $document->user_id;
+        return $this->user() !== null;
     }
 
     public function rules(): array
     {
         return [
             'titre' => ['required', 'string', 'max:255'],
-            'description' => ['nullable', 'string'],
-            'fichier' => ['nullable', 'file', 'max:10240'], // optionnel : remplace le fichier existant
+            'description' => ['nullable', 'string', 'max:5000'],
+            'fichier' => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx,ppt,pptx,txt,jpg,jpeg,png', 'max:' . config('document.max_file_size', 10240)],
             'project_id' => ['required', 'exists:projects,id'],
             'category_id' => ['required', 'exists:categories,id'],
             'department_id' => ['required', 'exists:departments,id'],
@@ -28,9 +25,14 @@ class UpdateDocumentRequest extends FormRequest
 
     public function messages(): array
     {
+        $maxSize = config('document.max_file_size', 10240) / 1024;
+
         return [
             'titre.required' => 'Le titre est obligatoire.',
-            'fichier.max' => 'Le fichier ne doit pas dépasser 10 Mo.',
+            'titre.max' => 'Le titre ne doit pas dépasser 255 caractères.',
+            'description.max' => 'La description ne doit pas dépasser 5000 caractères.',
+            'fichier.mimes' => 'Le fichier doit être de type : PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, JPG, JPEG ou PNG.',
+            'fichier.max' => "Le fichier ne doit pas dépasser {$maxSize} Mo.",
             'project_id.required' => 'Le projet est obligatoire.',
             'category_id.required' => 'La catégorie est obligatoire.',
             'department_id.required' => 'Le département est obligatoire.',

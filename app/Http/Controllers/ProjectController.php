@@ -20,7 +20,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        $departments = Department::orderBy('nom')->get();
+        $departments = Department::orderBy('nom')->get()->unique('nom');
 
         return view('projects.create', compact('departments'));
     }
@@ -42,7 +42,7 @@ class ProjectController extends Controller
 
     public function edit(Project $project)
     {
-        $departments = Department::orderBy('nom')->get();
+        $departments = Department::orderBy('nom')->get()->unique('nom');
 
         return view('projects.edit', compact('project', 'departments'));
     }

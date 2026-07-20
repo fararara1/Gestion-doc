@@ -10,9 +10,6 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
-    /**
-     * Affiche la liste des utilisateurs avec recherche simple.
-     */
     public function index()
     {
         $users = User::with('department')
@@ -30,19 +27,13 @@ class UserController extends Controller
         return view('users.index', compact('users'));
     }
 
-    /**
-     * Affiche le formulaire de création.
-     */
     public function create()
-{
-    $departments = Department::all();
+    {
+        $departments = Department::orderBy('nom')->get()->unique('nom');
 
-    return view('users.create', compact('departments'));
-}
+        return view('users.create', compact('departments'));
+    }
 
-    /**
-     * Enregistre un nouvel utilisateur.
-     */
     public function store(StoreUserRequest $request)
     {
         $data = $request->validated();
@@ -54,9 +45,6 @@ class UserController extends Controller
             ->with('success', 'Utilisateur créé avec succès.');
     }
 
-    /**
-     * Affiche le détail d'un utilisateur.
-     */
     public function show(User $user)
     {
         $user->load('department', 'documents');
@@ -64,19 +52,13 @@ class UserController extends Controller
         return view('users.show', compact('user'));
     }
 
-    /**
-     * Affiche le formulaire de modification.
-     */
     public function edit(User $user)
-{
-    $departments = Department::all();
+    {
+        $departments = Department::orderBy('nom')->get()->unique('nom');
 
-    return view('users.edit', compact('user', 'departments'));
-}
+        return view('users.edit', compact('user', 'departments'));
+    }
 
-    /**
-     * Met à jour un utilisateur.
-     */
     public function update(UpdateUserRequest $request, User $user)
     {
         $data = $request->validated();
@@ -93,12 +75,8 @@ class UserController extends Controller
             ->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
-    /**
-     * Supprime un utilisateur.
-     */
     public function destroy(User $user)
     {
-        // Empêcher un administrateur de se supprimer lui-même
         if ($user->id === auth()->id()) {
             return redirect()->route('users.index')
                 ->with('error', 'Vous ne pouvez pas supprimer votre propre compte.');
