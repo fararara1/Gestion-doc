@@ -60,6 +60,19 @@ return [
             'report' => false,
         ],
 
+        'cellar' => [
+            'driver' => 's3',
+            'key' => env('CELLAR_KEY_ID'),
+            'secret' => env('CELLAR_KEY_SECRET'),
+            'region' => env('CELLAR_REGION', 'fr-par'),
+            'bucket' => env('CELLAR_BUCKET'),
+            'endpoint' => env('CELLAR_HOST'),
+            'use_path_style_endpoint' => true,
+            'throw' => false,
+            'report' => false,
+            'url' => env('CELLAR_URL'),
+        ],
+
     ],
 
     /*

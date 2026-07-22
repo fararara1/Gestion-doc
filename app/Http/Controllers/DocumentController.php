@@ -55,7 +55,8 @@ class DocumentController extends Controller
         $data['user_id'] = $request->user()->id;
 
         if ($request->hasFile('fichier')) {
-            $data['fichier'] = $request->file('fichier')->store('documents', 'public');
+            $disk = config('filesystems.default');
+            $data['fichier'] = $request->file('fichier')->store('documents', $disk);
         } else {
             $data['fichier'] = null;
         }
@@ -93,10 +94,13 @@ class DocumentController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('fichier')) {
-            if ($document->fichier) {
-                Storage::disk('public')->delete($document->fichier);
+            $disk = Storage::disk(config('filesystems.default'));
+
+            if ($document->fichier && $disk->exists($document->fichier)) {
+                $disk->delete($document->fichier);
             }
-            $data['fichier'] = $request->file('fichier')->store('documents', 'public');
+
+            $data['fichier'] = $request->file('fichier')->store('documents', config('filesystems.default'));
         }
 
         $document->update($data);
@@ -109,7 +113,10 @@ class DocumentController extends Controller
     {
         $this->authorize('delete', $document);
 
-        Storage::disk('public')->delete($document->fichier);
+        if ($document->fichier) {
+            Storage::disk(config('filesystems.default'))->delete($document->fichier);
+        }
+
         $document->delete();
 
         return redirect()->route('documents.index')
@@ -124,16 +131,28 @@ class DocumentController extends Controller
             abort(404, 'Aucun fichier associé à ce document.');
         }
 
-        $path = Storage::disk('public')->path($document->fichier);
+        $disk = Storage::disk(config('filesystems.default'));
 
-        if (! file_exists($path)) {
+        if (! $disk->exists($document->fichier)) {
             abort(404, 'Fichier introuvable.');
         }
 
-        $fileName = $document->titre . '.' . pathinfo($path, PATHINFO_EXTENSION);
+        $fileName = $document->titre . '.' . pathinfo($document->fichier, PATHINFO_EXTENSION);
+
+        if ($disk->getDriver()->getAdapter() instanceof \Aws\S3\S3Client) {
+            $url = $disk->temporaryUrl(
+                $document->fichier,
+                now()->addMinutes(5),
+                ['ResponseContentDisposition' => 'attachment; filename="' . $fileName . '"']
+            );
+
+            return redirect()->away($url);
+        }
+
+        $path = $disk->path($document->fichier);
 
         return response()->download($path, $fileName, [
-            'Content-Type' => Storage::disk('public')->mimeType($document->fichier),
+            'Content-Type' => $disk->mimeType($document->fichier),
             'Content-Disposition' => 'attachment; filename="' . $fileName . '"',
         ]);
     }
