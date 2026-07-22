@@ -6,9 +6,11 @@
         <h1 class="page-title"><i class="bi bi-calendar-event"></i> Réunions</h1>
         <p class="page-subtitle">Planifiez et suivez vos réunions</p>
     </div>
-    <a href="{{ route('meetings.create') }}" class="btn btn-primary btn-sm">
-        <i class="bi bi-plus-lg"></i> Nouvelle réunion
-    </a>
+    @can('create', App\Models\Meeting::class)
+        <a href="{{ route('meetings.create') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg"></i> Nouvelle réunion
+        </a>
+    @endcan
 </div>
 
 <div class="table-responsive">
@@ -60,6 +62,6 @@
     </table>
 </div>
 <div class="card-body">
-    {{ $meetings->links() }}
+    {{ $meetings->links('pagination.custom') }}
 </div>
 @endsection

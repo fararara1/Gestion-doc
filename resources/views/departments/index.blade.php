@@ -77,7 +77,7 @@
         </tbody>
     </table>
 </div>
-<div class="d-flex justify-content-end mt-3" style="padding: 0 24px 16px;">
-    {{ $departments->links() }}
+<div class="card-body">
+    {{ $departments->links('pagination.custom') }}
 </div>
 @endsection

@@ -47,7 +47,7 @@
 
     <div class="col-md-12">
         <label class="form-label">
-            Fichier {{ isset($document) ? '(laisser vide pour conserver le fichier actuel)' : '' }}
+            Fichier {{ isset($document) ? '(laisser vide pour conserver le fichier actuel)' : '(optionnel)' }}
         </label>
         <input type="file" name="fichier" class="form-control @error('fichier') is-invalid @enderror"
                onchange="previewFile(this)">

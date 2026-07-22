@@ -46,7 +46,7 @@
                         @if($user->role === 'administrateur')
                             <span class="badge bg-primary">Admin</span>
                         @else
-                            <span class="badge bg-light">Utilisateur</span>
+                            <span class="badge bg-light">Collaborateur</span>
                         @endif
                     </td>
                     <td class="text-end">
@@ -74,6 +74,6 @@
     </table>
 </div>
 <div class="card-body">
-    {{ $users->links() }}
+    {{ $users->links('pagination.custom') }}
 </div>
 @endsection

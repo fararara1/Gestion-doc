@@ -54,6 +54,6 @@
     </table>
 </div>
 <div class="card-body">
-    {{ $projects->links() }}
+    {{ $projects->links('pagination.custom') }}
 </div>
 @endsection

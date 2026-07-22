@@ -44,9 +44,9 @@ class Meeting extends Model
 
     public function toIcs(): string
     {
-        $start = $this->date->format('Ymd') . substr($this->heure_debut->format('H:i'), 0, 5);
-        $end = $this->date->format('Ymd') . substr($this->heure_fin->format('H:i'), 0, 5);
-        $uid = uniqid('meeting-' . $this->id . '-', false) . '@gestdoc';
+        $start = $this->date->format('Ymd') . 'T' . $this->heure_debut->format('Hi');
+        $end = $this->date->format('Ymd') . 'T' . $this->heure_fin->format('Hi');
+        $uid = $this->id . '@gestdoc';
 
         $escapeIcs = function (string $value): string {
             $value = str_replace(["\r\n", "\n", "\r"], '\\n', $value);

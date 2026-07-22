@@ -153,23 +153,17 @@
         </div>
 
         @if(auth()->user()->isAdmin())
-            <div class="card">
-                <div class="card-header" style="background: var(--navy-900); color: #ffffff; border-bottom: none;">
-                    <i class="bi bi-exclamation-triangle"></i> Zone de danger
-                </div>
-                <div class="card-body">
-                    <p class="text-navy-600 mb-0">En tant qu'administrateur, vous ne pouvez pas supprimer votre propre compte.</p>
-                </div>
+            <div class="alert alert-light d-flex align-items-center gap-2 mb-0">
+                <i class="bi bi-exclamation-triangle" style="color: var(--navy-600);"></i>
+                <span class="text-navy-600" style="font-size: 0.88rem;">En tant qu'administrateur, vous ne pouvez pas supprimer votre propre compte.</span>
             </div>
         @else
-            <div class="card">
-                <div class="card-header" style="background: #dc2626; color: #ffffff; border-bottom: none;">
-                    <i class="bi bi-trash"></i> Supprimer mon compte
+            <div class="d-flex align-items-center justify-content-between gap-2" style="background: #fef2f2; border: 1px solid #fecaca; border-radius: var(--radius); padding: 6px 12px;">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="bi bi-trash" style="color: #dc2626; font-size: 0.85rem;"></i>
+                    <span class="text-navy-600" style="font-size: 0.8rem;">Suppression définitive du compte.</span>
                 </div>
-                <div class="card-body">
-                    <p class="text-navy-600 mb-0">Une fois votre compte supprimé, toutes ses ressources et données seront définitivement supprimées.</p>
-                    @include('profile.partials.delete-user-form')
-                </div>
+                @include('profile.partials.delete-user-form')
             </div>
         @endif
     </div>

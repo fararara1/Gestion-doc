@@ -7,6 +7,11 @@ use App\Models\User;
 
 class MeetingPolicy
 {
+    public function create(User $user): bool
+    {
+        return $user->isAdmin();
+    }
+
     public function view(User $user, Meeting $meeting): bool
     {
         if ($user->isAdmin() || $user->id === $meeting->user_id) {

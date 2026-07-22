@@ -17,7 +17,16 @@ Route::middleware(['auth'])->group(function () {
         ->name('dashboard');
 
     Route::resource('documents', DocumentController::class);
-    Route::resource('meetings', MeetingController::class);
+    Route::get('meetings', [MeetingController::class, 'index'])->name('meetings.index');
+    Route::middleware('admin')->group(function () {
+        Route::get('meetings/create', [MeetingController::class, 'create'])->name('meetings.create');
+        Route::post('meetings', [MeetingController::class, 'store'])->name('meetings.store');
+        Route::get('meetings/{meeting}/edit', [MeetingController::class, 'edit'])->name('meetings.edit');
+        Route::put('meetings/{meeting}', [MeetingController::class, 'update'])->name('meetings.update');
+        Route::delete('meetings/{meeting}', [MeetingController::class, 'destroy'])->name('meetings.destroy');
+    });
+    Route::get('meetings/{meeting}/ics', [MeetingController::class, 'downloadIcs'])->name('meetings.ics');
+    Route::get('meetings/{meeting}', [MeetingController::class, 'show'])->name('meetings.show');
 
     Route::middleware('admin')->group(function () {
         Route::resource('users', UserController::class);
@@ -32,18 +41,10 @@ Route::middleware(['auth'])->group(function () {
         return redirect()->route('documents.index');
     })->name('documents.share.redirect');
     Route::delete('documents/{document}/partage/{user}', [DocumentController::class, 'shareDestroy'])->name('documents.share.destroy');
-    Route::get('meetings/{meeting}/ics', [MeetingController::class, 'downloadIcs'])->name('meetings.ics');
+    Route::post('notifications/mark-all-read', [DocumentController::class, 'markAllNotificationsAsRead'])->name('notifications.markAllRead');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
-    Route::middleware('admin')->get('/test-email', function () {
-        \Illuminate\Support\Facades\Mail::raw('Test email depuis GestDoc.', function ($message) {
-            $message->to('test@example.com')->subject('Test email');
-        });
-
-        return back()->with('success', 'Email de test envoyé.');
-    })->name('test.email');
 });
 
 require __DIR__.'/auth.php';

@@ -33,7 +33,7 @@
                             <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin: 30px 0;">
                                 <tr>
                                     <td style="padding: 15px; background-color: #f8fafc; border-radius: 12px; border: 1px solid #e2e8f0;">
-                                        <strong style="color: #475569;">Date :</strong>
+                                        <strong style="color: #475569;">Date</strong>
                                         <span style="color: #1e293b;">{{ \Carbon\Carbon::parse($meeting->date)->format('d/m/Y') }}</span>
                                     </td>
                                 </tr>

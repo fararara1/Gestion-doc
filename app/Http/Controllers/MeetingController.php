@@ -31,6 +31,8 @@ class MeetingController extends Controller
 
     public function create()
     {
+        $this->authorize('create', Meeting::class);
+
         $users = User::orderBy('nom')->get();
         $documents = Document::orderBy('titre')->get();
 
@@ -39,6 +41,8 @@ class MeetingController extends Controller
 
     public function store(StoreMeetingRequest $request)
     {
+        $this->authorize('create', Meeting::class);
+
         $validated = $request->validated();
 
         $meeting = Meeting::create([

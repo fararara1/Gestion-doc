@@ -7,6 +7,7 @@
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/choices.js/11.0.13/choices.min.css" rel="stylesheet">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
@@ -315,6 +316,140 @@
             line-height: 1.2;
         }
 
+        /* ===== NOTIFICATIONS ===== */
+        .notification-dropdown {
+            position: relative;
+            margin-right: 12px;
+        }
+        .notification-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--navy-700);
+            cursor: pointer;
+            position: relative;
+            padding: 6px;
+            border-radius: 50%;
+            transition: background 0.15s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .notification-toggle:hover {
+            background: var(--navy-50);
+            color: var(--navy-900);
+        }
+        .notification-badge {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #dc2626;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 10px;
+            line-height: 1;
+            border: 2px solid #fff;
+            min-width: 16px;
+            text-align: center;
+        }
+        .notification-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 48px;
+            width: 360px;
+            max-height: 420px;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+            z-index: 1050;
+            overflow: hidden;
+        }
+        .notification-menu.show {
+            display: block;
+        }
+        .notification-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .notification-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--navy-900);
+        }
+        .notification-mark-all {
+            background: none;
+            border: none;
+            color: var(--gold-600);
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+        .notification-mark-all:hover {
+            color: var(--gold-700);
+            text-decoration: underline;
+        }
+        .notification-list {
+            max-height: 340px;
+            overflow-y: auto;
+        }
+        .notification-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 16px;
+            text-decoration: none;
+            color: inherit;
+            transition: background 0.15s;
+            border-bottom: 1px solid #f8fafc;
+        }
+        .notification-item:hover {
+            background: #fefce8;
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notification-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: var(--radius-sm);
+            background: #fefce8;
+            color: var(--gold-600);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+        .notification-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .notification-text {
+            font-size: 13px;
+            color: var(--navy-800);
+            line-height: 1.4;
+        }
+        .notification-meta {
+            font-size: 11px;
+            color: var(--navy-600);
+            margin-top: 2px;
+        }
+        .notification-empty {
+            padding: 24px 16px;
+            text-align: center;
+            color: var(--navy-600);
+            font-size: 13px;
+        }
+
         /* ===== MAIN CONTENT ===== */
         .main-content {
             margin-left: 270px;
@@ -530,6 +665,63 @@
             background: #b45309;
         }
 
+        /* ===== LOGOUT CONFIRMATION ===== */
+        .sidebar-footer .btn-logout-trigger {
+            width: 100%;
+            text-align: left;
+            background: transparent;
+            border: 1px solid #dc2626;
+            color: #dc2626;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Inter', sans-serif;
+            border-radius: var(--radius-sm);
+            margin-top: 8px;
+        }
+        .sidebar-footer .btn-logout-trigger:hover {
+            background: #fef2f2;
+            color: #b91c1c;
+            border-color: #b91c1c;
+            transform: translateY(-1px);
+        }
+        .sidebar-footer .btn-logout-trigger:active {
+            transform: translateY(0);
+        }
+        .logout-confirm-text {
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            color: var(--navy-700);
+            margin: 0;
+            line-height: 1.5;
+        }
+        #logoutConfirmModal .modal-title {
+            font-family: 'Playfair Display', serif;
+            color: var(--navy-900);
+        }
+        #logoutConfirmModal .modal-content {
+            border-radius: var(--radius);
+            border: none;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
+        }
+        #logoutConfirmModal .modal-header {
+            border-bottom: 1px solid #f1f5f9;
+            padding: 20px 24px;
+        }
+        #logoutConfirmModal .modal-body {
+            padding: 24px;
+        }
+        #logoutConfirmModal .modal-footer {
+            border-top: 1px solid #f1f5f9;
+            padding: 16px 24px;
+            gap: 10px;
+        }
+
         .btn-outline-primary {
             background: transparent;
             color: var(--gold-700);
@@ -659,9 +851,9 @@
         }
 
         .alert-success {
-            background: #fefce8;
-            border-left-color: var(--gold-500);
-            color: var(--gold-700);
+            background: #f0fdf4;
+            border-left-color: #16a34a;
+            color: #15803d;
         }
 
         .alert-danger {
@@ -719,28 +911,81 @@
         }
 
         /* ===== PAGINATION ===== */
-        .pagination {
-            gap: 4px;
+        .pagination-custom {
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: nowrap;
         }
 
-        .pagination .page-link {
-            border: none;
-            border-radius: var(--radius-sm);
-            padding: 7px 12px;
-            color: var(--gold-700);
-            font-weight: 500;
-            transition: var(--transition);
+        .pagination-custom .page-link {
+            width: 40px;
+            height: 40px;
+            padding: 0;
+            border-radius: 50%;
+            border: 1px solid #d1d5db;
+            background: #fff;
+            color: #4b5563;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
             font-family: 'Inter', sans-serif;
+            text-decoration: none;
         }
 
-        .pagination .page-item.active .page-link {
-            background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-400) 100%);
-            color: var(--navy-900);
+        .pagination-custom .page-item.active .page-link {
+            background: #FFC107;
+            border-color: #FFC107;
+            color: #0F172A;
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.35);
         }
 
-        .pagination .page-link:hover {
-            background: var(--gold-500);
-            color: var(--navy-900);
+        .pagination-custom .page-item:not(.active):not(.disabled) .page-link:hover {
+            background: #FFC107;
+            border-color: #FFC107;
+            color: #0F172A;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.25);
+        }
+
+        .pagination-custom .page-item.disabled .page-link {
+            background: #f3f4f6;
+            border-color: #e5e7eb;
+            color: #9ca3af;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .pagination-custom .page-item.disabled .page-link:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .pagination-text {
+            font-size: 13px;
+            font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            color: #6b7280;
+            text-align: center;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 576px) {
+            .pagination-custom {
+                gap: 6px;
+            }
+
+            .pagination-custom .page-link {
+                width: 36px;
+                height: 36px;
+                font-size: 13px;
+            }
+
+            .pagination-text {
+                font-size: 12px;
+            }
         }
 
         /* ===== MODALS ===== */
@@ -949,12 +1194,9 @@
             </ul>
 
             <div class="sidebar-footer">
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button type="submit">
-                        <i class="bi bi-box-arrow-right"></i> Déconnexion
-                    </button>
-                </form>
+                <button type="button" class="btn-logout-trigger" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
+                    <i class="bi bi-box-arrow-right"></i> Déconnexion
+                </button>
             </div>
         </nav>
 
@@ -972,14 +1214,58 @@
                     </div>
                 </div>
                 <div class="header-user">
-                        <div class="user-avatar">
-                            {{ strtoupper(mb_substr(Auth::user()->prenom, 0, 1) . mb_substr(Auth::user()->nom, 0, 1)) }}
-                        </div>
-                        <div class="user-info">
-                            <span class="user-name">{{ Auth::user()->prenom }} {{ Auth::user()->nom }}</span>
-                            <span class="user-role">{{ ucfirst(Auth::user()->role) }}</span>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <button class="notification-toggle" id="notificationToggle" type="button">
+                            <i class="bi bi-bell"></i>
+                            @php
+                                $unreadCount = auth()->user()->unreadNotifications->count();
+                            @endphp
+                            @if($unreadCount > 0)
+                                <span class="notification-badge">{{ $unreadCount > 99 ? '99+' : $unreadCount }}</span>
+                            @endif
+                        </button>
+                        <div class="notification-menu" id="notificationMenu">
+                            <div class="notification-header">
+                                <span class="notification-title">Notifications</span>
+                                @if($unreadCount > 0)
+                                    <form method="POST" action="{{ route('notifications.markAllRead') }}" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="notification-mark-all">Tout marquer comme lu</button>
+                                    </form>
+                                @endif
+                            </div>
+                            <div class="notification-list">
+                                @php
+                                    $notifications = auth()->user()->unreadNotifications->take(10);
+                                @endphp
+                                @forelse($notifications as $notification)
+                                    <a href="{{ $notification->data['document_url'] ?? '#' }}" class="notification-item">
+                                        <div class="notification-icon">
+                                            <i class="bi bi-file-earmark-text"></i>
+                                        </div>
+                                        <div class="notification-content">
+                                            <div class="notification-text">
+                                                <strong>{{ $notification->data['shared_by_name'] ?? 'Quelqu\'un' }}</strong> a partagé le document <strong>{{ $notification->data['document_titre'] ?? '' }}</strong>
+                                            </div>
+                                            <div class="notification-meta">
+                                                Droit : {{ $notification->data['droit'] ?? '' }} · {{ $notification->created_at->diffForHumans() }}
+                                            </div>
+                                        </div>
+                                    </a>
+                                @empty
+                                    <div class="notification-empty">Aucune notification non lue</div>
+                                @endforelse
+                            </div>
                         </div>
                     </div>
+                    <div class="user-avatar">
+                        {{ strtoupper(mb_substr(Auth::user()->prenom, 0, 1) . mb_substr(Auth::user()->nom, 0, 1)) }}
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">{{ Auth::user()->prenom }} {{ Auth::user()->nom }}</span>
+                        <span class="user-role">{{ ucfirst(Auth::user()->role) }}</span>
+                    </div>
+                </div>
             </header>
 
             <!-- Content -->
@@ -1005,6 +1291,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/choices.js/11.0.13/choices.min.js"></script>
     <script>
         (function () {
             function cleanModalState() {
@@ -1061,6 +1348,7 @@
                 document.addEventListener('click', function (e) {
                     if (window.innerWidth <= 992 &&
                         sidebar &&
+                        toggleBtn &&
                         sidebar.classList.contains('show') &&
                         !sidebar.contains(e.target) &&
                         e.target !== toggleBtn &&
@@ -1068,9 +1356,55 @@
                         sidebar.classList.remove('show');
                     }
                 });
+
+                // Notifications dropdown
+                var notificationToggle = document.getElementById('notificationToggle');
+                var notificationMenu = document.getElementById('notificationMenu');
+                if (notificationToggle && notificationMenu) {
+                    notificationToggle.addEventListener('click', function (e) {
+                        e.stopPropagation();
+                        notificationMenu.classList.toggle('show');
+                    });
+                    document.addEventListener('click', function (e) {
+                        if (!notificationToggle.contains(e.target) && !notificationMenu.contains(e.target)) {
+                            notificationMenu.classList.remove('show');
+                        }
+                    });
+                }
+
+                // Logout confirmation
+                var confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+                var logoutConfirmForm = document.getElementById('logoutConfirmForm');
+                if (confirmLogoutBtn && logoutConfirmForm) {
+                    confirmLogoutBtn.addEventListener('click', function () {
+                        logoutConfirmForm.submit();
+                    });
+                }
             });
         })();
     </script>
     @stack('scripts')
+
+    <!-- Modal de confirmation de déconnexion -->
+    <div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la déconnexion</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{{ route('logout') }}" id="logoutConfirmForm">
+                        @csrf
+                        <p class="logout-confirm-text">Êtes-vous sûr de vouloir vous déconnecter de GestDoc ?</p>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" class="btn btn-danger btn-sm" id="confirmLogoutBtn">Se déconnecter</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>

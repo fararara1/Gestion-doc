@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreDocumentRequest;
 use App\Http\Requests\UpdateDocumentRequest;
+use App\Http\Requests\ShareDocumentRequest;
 use App\Models\Category;
 use App\Models\Department;
 use App\Models\Document;
 use App\Models\Project;
 use App\Models\User;
+use App\Notifications\DocumentShared;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -50,8 +52,13 @@ class DocumentController extends Controller
     public function store(StoreDocumentRequest $request)
     {
         $data = $request->validated();
-        $data['fichier'] = $request->file('fichier')->store('documents', 'public');
         $data['user_id'] = $request->user()->id;
+
+        if ($request->hasFile('fichier')) {
+            $data['fichier'] = $request->file('fichier')->store('documents', 'public');
+        } else {
+            $data['fichier'] = null;
+        }
 
         Document::create($data);
 
@@ -65,7 +72,9 @@ class DocumentController extends Controller
 
         $document->load(['user', 'project', 'category', 'department', 'sharedWith']);
 
-        return view('documents.show', compact('document'));
+        $allUsers = User::orderBy('nom')->get();
+
+        return view('documents.show', compact('document', 'allUsers'));
     }
 
     public function edit(Document $document)
@@ -84,7 +93,9 @@ class DocumentController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('fichier')) {
-            Storage::disk('public')->delete($document->fichier);
+            if ($document->fichier) {
+                Storage::disk('public')->delete($document->fichier);
+            }
             $data['fichier'] = $request->file('fichier')->store('documents', 'public');
         }
 
@@ -108,6 +119,10 @@ class DocumentController extends Controller
     public function download(Document $document)
     {
         $this->authorize('view', $document);
+
+        if (empty($document->fichier)) {
+            abort(404, 'Aucun fichier associé à ce document.');
+        }
 
         $path = Storage::disk('public')->path($document->fichier);
 
@@ -135,6 +150,13 @@ class DocumentController extends Controller
 
         $document->sharedWith()->syncWithoutDetaching($pivotData);
 
+        foreach ($data['user_ids'] as $userId) {
+            $user = User::find($userId);
+            if ($user) {
+                $user->notify(new DocumentShared($document, auth()->user(), $data['droit']));
+            }
+        }
+
         return redirect()->route('documents.index')
             ->with('success', 'Document partagé avec succès.');
     }
@@ -147,6 +169,13 @@ class DocumentController extends Controller
 
         return redirect()->route('documents.index')
             ->with('success', 'Partage révoqué avec succès.');
+    }
+
+    public function markAllNotificationsAsRead()
+    {
+        auth()->user()->unreadNotifications->markAsRead();
+
+        return back();
     }
 
     private function selectLists(): array
