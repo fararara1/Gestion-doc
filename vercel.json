@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "framework": null,
-  "installCommand": "cd gestion-documentaire && composer install --no-dev --optimize-autoloader",
-  "outputDirectory": "gestion-documentaire/public",
-  "routes": [
-    { "src": "/(.*)", "dest": "/gestion-documentaire/public/index.php" }
-  ]
-}
