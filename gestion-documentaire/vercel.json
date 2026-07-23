@@ -1,9 +1,0 @@
-{
-  "version": 2,
-  "buildCommand": "composer install --no-dev --optimize-autoloader",
-  "outputDirectory": "public",
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "public/index.php" }
-  ]
-}
