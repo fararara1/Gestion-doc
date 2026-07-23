@@ -1,7 +1,6 @@
 {
   "version": 2,
   "framework": "laravel",
-  "phpVersion": "8.3",
   "buildCommand": "composer install --no-dev --optimize-autoloader",
   "outputDirectory": "public",
   "routes": [
