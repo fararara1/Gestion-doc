@@ -14,6 +14,13 @@ Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::get('/health', [\App\Http\Controllers\HealthController::class, 'index']);
 
+Route::get('/setup', function () {
+    \Artisan::call('db:seed', ['--force' => true]);
+
+    return redirect('/login')
+        ->with('success', 'Données initiales créées. Utilisez admin@entreprise.com / password');
+})->name('setup');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
