@@ -12,6 +12,8 @@ use App\Models\Document;
 
 Route::get('/', fn () => redirect()->route('dashboard'));
 
+Route::get('/health', [\App\Http\Controllers\HealthController::class, 'index']);
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
