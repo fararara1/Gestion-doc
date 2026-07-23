@@ -1,16 +1,17 @@
 <?php
 
+define('LARAVEL_START', microtime(true));
+
 require __DIR__.'/../vendor/autoload.php';
 
 $app = require_once __DIR__.'/../bootstrap/app.php';
 
-$kernel = $app->make(Illuminate\Contracts\Console\Kernel::class);
+$kernel = $app->make(Illuminate\Contracts\Http\Kernel::class);
 
-$status = $kernel->handle(
-    $input = new Illuminate\Http\Cli\Input,
-    new Symfony\Component\Console\Output\ConsoleOutput
+$response = $kernel->handle(
+    $request = Illuminate\Http\Request::capture()
 );
 
-$kernel->terminate($input, $status);
+$response->send();
 
-exit($status);
+$kernel->terminate($request, $response);
