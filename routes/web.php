@@ -17,8 +17,21 @@ Route::get('/health', [\App\Http\Controllers\HealthController::class, 'index']);
 Route::get('/setup', function () {
     \Artisan::call('db:seed', ['--force' => true]);
 
+    $informatique = \App\Models\Department::where('nom', 'Informatique')->first();
+
+    if (! \App\Models\User::where('email', 'responsable@entreprise.com')->exists()) {
+        \App\Models\User::create([
+            'nom' => 'Responsable',
+            'prenom' => 'Principal',
+            'email' => 'responsable@entreprise.com',
+            'password' => 'password',
+            'role' => 'responsable',
+            'department_id' => $informatique?->id,
+        ]);
+    }
+
     return redirect('/login')
-        ->with('success', 'Données initiales créées. Utilisez admin@entreprise.com / password');
+        ->with('success', 'Comptes créés. admin@entreprise.com / password ou responsable@entreprise.com / password');
 })->name('setup');
 
 Route::middleware(['auth'])->group(function () {
