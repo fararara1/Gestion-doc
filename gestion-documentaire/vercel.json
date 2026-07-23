@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": "composer install --no-dev --optimize-autoloader && npm install --ignore-scripts && npm run build",
+  "outputDirectory": "public",
+  "routes": [
+    { "src": "/(.*)", "dest": "public/index.php" }
+  ]
+}
