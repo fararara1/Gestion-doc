@@ -27,3 +27,4 @@ Homestead.yaml
 Thumbs.db
 env_backup.txt 
 .vercel
+vite.config.js

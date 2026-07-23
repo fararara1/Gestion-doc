@@ -1,10 +1,5 @@
 {
   "version": 2,
-  "functions": {
-    "public/index.php": {
-      "runtime": "vercel-php@0.6.0"
-    }
-  },
   "buildCommand": "composer install --no-dev --optimize-autoloader",
   "outputDirectory": "public",
   "routes": [
