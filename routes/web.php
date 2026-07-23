@@ -14,6 +14,24 @@ Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::get('/health', [\App\Http\Controllers\HealthController::class, 'index']);
 
+Route::get('/diagnostic', function () {
+    try {
+        $dbStatus = DB::connection()->getPdo() ? 'OK' : 'FAIL';
+    } catch (\Throwable $e) {
+        $dbStatus = 'ERROR: ' . $e->getMessage();
+    }
+
+    return response()->json([
+        'app' => config('app.name'),
+        'env' => config('app.env'),
+        'debug' => config('app.debug'),
+        'url' => config('app.url'),
+        'database' => $dbStatus,
+        'session_driver' => config('session.driver'),
+        'cache_driver' => config('cache.default'),
+    ]);
+})->name('diagnostic');
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
