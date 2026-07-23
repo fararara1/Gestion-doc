@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "framework": null,
+  "buildCommand": "composer install --no-dev --optimize-autoloader",
+  "outputDirectory": "public",
+  "installCommand": "composer install --no-dev --optimize-autoloader",
+  "routes": [
+    { "src": "/(.*)", "dest": "/gestion-documentaire/public/index.php" }
+  ]
+}
