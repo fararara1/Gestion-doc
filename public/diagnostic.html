@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Diagnostic Clever Cloud</title>
+    <style>
+        body { font-family: monospace; background: #f4f4f4; padding: 2rem; }
+        .box { background: #fff; padding: 1rem; border: 1px solid #ddd; margin-bottom: 1rem; }
+        .ok { color: green; }
+        .ko { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Diagnostic</h1>
+    <div class="box">
+        <strong>Chemin public :</strong> /public/<br>
+        <strong>diagnostic.html trouvé :</strong> <span class="ok">oui</span><br>
+        <strong>Date :</strong> 2026-07-23
+    </div>
+    <div class="box">
+        <strong>Prochaine étape :</strong> ajouter des fichiers statiques si celui-ci s'affiche.<br>
+        <strong>Si 500 :</strong> le problème n'est pas PHP, c'est Apache/Clever Cloud.
+    </div>
+</body>
+</html>
