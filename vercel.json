@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": "cd gestion-documentaire && composer install --no-dev --optimize-autoloader",
+  "outputDirectory": "gestion-documentaire/public",
+  "routes": [
+    { "src": "/(.*)", "dest": "/gestion-documentaire/public/index.php" }
+  ]
+}
