@@ -1,27 +1,20 @@
 #!/bin/bash
-
 set -e
 
-echo "Waiting for MySQL to be ready..."
+echo "Waiting for MySQL..."
 until mysql -h "$DB_HOST" -u "$DB_USERNAME" -p"$DB_PASSWORD" -e "SELECT 1" > /dev/null 2>&1; do
   sleep 2
 done
-echo "MySQL is ready."
+echo "MySQL ready."
 
-echo "Generating application key if needed..."
-php artisan key:generate --force
+php /var/www/html/artisan key:generate --force
+php /var/www/html/artisan migrate --force
+php /var/www/html/artisan config:cache
+php /var/www/html/artisan view:cache
+php /var/www/html/artisan route:cache
 
-echo "Running database migrations..."
-php artisan migrate --force
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 755 /var/www/html/public
 
-echo "Caching configurations..."
-php artisan config:cache
-php artisan view:cache
-php artisan route:cache
-
-echo "Setting permissions..."
-chmod -R 775 storage bootstrap/cache
-chmod -R 755 public
-
-echo "Starting Apache..."
 exec apache2-foreground
