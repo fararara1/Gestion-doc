@@ -37,4 +37,4 @@ echo "Setting permissions..."
 chmod -R 775 storage bootstrap/cache
 chmod -R 755 public
 
-echo "✅ Laravel deployment completed successfully!"
+echo "[OK] Laravel deployment completed successfully!"
