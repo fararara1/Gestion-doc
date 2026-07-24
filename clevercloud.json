@@ -1,0 +1,13 @@
+{
+  "deploy": {
+    "php": {
+      "appFolder": "public",
+      "deployHook": "bash clevercloud/deploy.sh"
+    }
+  },
+  "build": {
+    "docker": {
+      "file": "Dockerfile"
+    }
+  }
+}
