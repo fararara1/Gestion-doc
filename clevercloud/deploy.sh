@@ -28,6 +28,10 @@ php artisan config:cache
 php artisan view:cache
 php artisan route:cache
 
+# Create symlink so Apache finds index.php at root
+echo "Creating webroot symlink..."
+ln -sf public/index.php index.php
+
 # Set proper permissions
 echo "Setting permissions..."
 chmod -R 775 storage bootstrap/cache
