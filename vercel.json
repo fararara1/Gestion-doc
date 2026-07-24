@@ -1,0 +1,23 @@
+{
+  "buildCommand": "composer install && npm ci && npm run build",
+  "devCommand": "php artisan serve",
+  "env": {
+    "APP_ENV": "production",
+    "APP_DEBUG": "false",
+    "LOG_CHANNEL": "stderr",
+    "CACHE_DRIVER": "array",
+    "SESSION_DRIVER": "database",
+    "QUEUE_CONNECTION": "database"
+  },
+  "functions": {
+    "api/index.php": {
+      "runtime": "php:8.3"
+    }
+  },
+  "routes": [
+    {
+      "src": "/(.*)$",
+      "dest": "/api/index.php"
+    }
+  ]
+}
