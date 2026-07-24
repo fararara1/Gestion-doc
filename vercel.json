@@ -1,6 +1,7 @@
 {
-  "buildCommand": "composer install && npm ci && npm run build",
+  "buildCommand": "composer install --no-interaction --prefer-dist --optimize-autoloader && npm ci && npm run build",
   "devCommand": "php artisan serve",
+  "installCommand": "composer install --no-interaction --prefer-dist --optimize-autoloader && npm ci",
   "env": {
     "APP_ENV": "production",
     "APP_DEBUG": "false",
