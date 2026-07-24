@@ -14,6 +14,11 @@ Route::get('/', fn () => redirect()->route('dashboard'));
 
 Route::get('/health', [\App\Http\Controllers\HealthController::class, 'index']);
 
+Route::get('/run-migrations', function () {
+    \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+    return 'Migrations ran: ' . \Illuminate\Support\Facades\Artisan::output();
+});
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
