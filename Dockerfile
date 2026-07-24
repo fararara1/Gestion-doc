@@ -13,7 +13,9 @@ FROM php:8.3-apache
 
 COPY --from=composer /app /var/www/html
 
-RUN a2enmod rewrite && \
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh && \
+    a2enmod rewrite && \
     echo '<VirtualHost *:80>' > /etc/apache2/sites-available/000-default.conf && \
     echo '    DocumentRoot /var/www/html/public' >> /etc/apache2/sites-available/000-default.conf && \
     echo '    <Directory /var/www/html/public>' >> /etc/apache2/sites-available/000-default.conf && \
@@ -24,4 +26,4 @@ RUN a2enmod rewrite && \
 
 EXPOSE 80
 
-CMD ["apache2-foreground"]
+CMD ["docker-entrypoint.sh"]
