@@ -2,6 +2,9 @@
 
 # Clever Cloud Laravel deployment script
 
+export LANG=C
+export LC_ALL=C
+
 echo "Starting Laravel deployment..."
 
 # Install dependencies
