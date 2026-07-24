@@ -7,8 +7,6 @@ RUN cd /var/www/html && composer install --no-dev --optimize-autoloader --no-int
 
 COPY . /var/www/html
 
-RUN cd /var/www/html && composer install --no-interaction
-
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
@@ -18,4 +16,5 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 
 EXPOSE 80
 
-CMD ["docker-entrypoint.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["apache2-foreground"]
